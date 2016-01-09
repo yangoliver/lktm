@@ -1,0 +1,6 @@
+#
+# Makefile for Linux samplefs
+#
+obj-$(CONFIG_SAMPLEFS_FS) += samplefs.o inode.o file.o
+
+samplefs-objs := super.o
