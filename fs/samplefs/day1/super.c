@@ -37,7 +37,13 @@ static int samplefs_fill_super(struct super_block * sb, void * data, int silent)
 	return 0;
 }
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
+static struct dentry *samplefs_mount(struct file_system_type *fs_type, int flags,
+	const char *dev_name, void *data)
+{
+	return mount_nodev(fs_type, flags, data, samplefs_fill_super);
+}
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
 struct super_block * samplefs_get_sb(struct file_system_type *fs_type,
         int flags, const char *dev_name, void *data)
 {
@@ -55,7 +61,11 @@ int samplefs_get_sb(struct file_system_type *fs_type,
 static struct file_system_type samplefs_fs_type = {
 	.owner = THIS_MODULE,
 	.name = "samplefs",
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
+	.mount = samplefs_mount,
+#else
 	.get_sb = samplefs_get_sb,
+#endif
 	.kill_sb = kill_anon_super,
 	/*  .fs_flags */
 };
