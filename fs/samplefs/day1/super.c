@@ -83,4 +83,4 @@ static void __exit exit_samplefs_fs(void)
 
 module_init(init_samplefs_fs)
 module_exit(exit_samplefs_fs)
-
+MODULE_LICENSE("GPL");
