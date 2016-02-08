@@ -30,6 +30,7 @@
 #include <linux/pagemap.h>
 #include <linux/version.h>
 #include <linux/nls.h>
+#include <linux/slab.h>
 #include "samplefs.h"
 
 /* helpful if this is different than other fs */
@@ -109,7 +110,7 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 /* Eventually replace iget with:
 	inode = samplefs_get_inode(sb, S_IFDIR | 0755, 0); */
 
-	inode = iget(sb, SAMPLEFS_ROOT_I);
+	inode = iget_locked(sb, SAMPLEFS_ROOT_I);
 
 	if (!inode)
 		return -ENOMEM;
@@ -121,7 +122,7 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 		return -ENOMEM;
 	}
 
-	sb->s_root = d_alloc_root(inode);
+	sb->s_root = d_make_root(inode);
 	if (!sb->s_root) {
 		iput(inode);
 		kfree(sfs_sb);
