@@ -3,4 +3,4 @@
 #
 obj-m += sampleblk.o
 
-sampleblk-objs := sampleblk.o
+sampleblk-objs := sample_blk.o

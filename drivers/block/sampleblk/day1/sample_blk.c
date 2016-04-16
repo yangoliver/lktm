@@ -22,6 +22,7 @@
 
 #include <linux/module.h>
 #include <linux/version.h>
+#include <linux/fs.h>
 
 static int sampleblk_major;
 
@@ -37,7 +38,7 @@ static int __init sampleblk_init(void)
 
 static void __exit sampleblk_exit(void)
 {
-	unregister_blkdev(sample_major, "sampleblk");
+	unregister_blkdev(sampleblk_major, "sampleblk");
 
 	pr_info("sampleblk: module loaded\n");
 }
