@@ -40,7 +40,7 @@ static void __exit sampleblk_exit(void)
 {
 	unregister_blkdev(sampleblk_major, "sampleblk");
 
-	pr_info("sampleblk: module loaded\n");
+	pr_info("sampleblk: module unloaded\n");
 }
 
 module_init(sampleblk_init);
