@@ -43,6 +43,6 @@ static void __exit sampleblk_exit(void)
 	pr_info("sampleblk: module loaded\n");
 }
 
-module_init(sampleblk_init)
-module_exit(sampleblk_exit)
+module_init(sampleblk_init);
+module_exit(sampleblk_exit);
 MODULE_LICENSE("GPL");
