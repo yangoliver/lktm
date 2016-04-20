@@ -28,6 +28,7 @@
 
 static int sampleblk_major;
 #define SAMPLEBLK_MINOR	1
+static int sampleblk_size = CONFIG_BLK_DEV_RAM_SIZE;
 
 struct sampleblk_dev {
 	int minor;
@@ -37,6 +38,32 @@ struct sampleblk_dev {
 };
 
 struct sampleblk_dev *sampleblk_dev = NULL;
+
+static void sampleblk_request(struct request_queue *rq)
+{
+}
+
+static int sampleblk_ioctl(struct block_device *bdev, fmode_t mode,
+			unsigned command, unsigned long argument)
+{
+	return 0;
+}
+
+static int sampleblk_open(struct block_device *bdev, fmode_t mode)
+{
+	return 0;
+}
+
+static void sampleblk_release(struct gendisk *disk, fmode_t mode)
+{
+}
+
+static const struct block_device_operations sampleblk_fops = {
+	.owner = THIS_MODULE,
+	.open = sampleblk_open,
+	.release = sampleblk_release,
+	.ioctl = sampleblk_ioctl,
+};
 
 static int sampleblk_alloc(int minor)
 {
@@ -53,7 +80,8 @@ static int sampleblk_alloc(int minor)
 
 	spin_lock_init(&sampleblk_dev->lock);
 
-	sampleblk_dev->queue = blk_alloc_queue(GFP_KERNEL);
+	sampleblk_dev->queue = blk_init_queue(sampleblk_request,
+	    &sampleblk_dev->lock);
 	if (!sampleblk_dev->queue) {
 		rv = ENOMEM;
 		goto fail_dev;
@@ -66,11 +94,13 @@ static int sampleblk_alloc(int minor)
 	}
 
 	disk->major = sampleblk_major;
-	disk->first_minor   = minor;
-	disk->fops      = NULL;
-	disk->private_data  = sampleblk_dev;
-	disk->queue     = sampleblk_dev->queue;
+	disk->first_minor = minor;
+	disk->fops = &sampleblk_fops;
+	disk->private_data = sampleblk_dev;
+	disk->queue = sampleblk_dev->queue;
 	sprintf(disk->disk_name, "sampleblk%d", minor);
+	set_capacity(disk, sampleblk_size);
+	add_disk(disk);
 
 	return 0;
 
@@ -84,6 +114,7 @@ fail:
 
 static void sampleblk_free(struct sampleblk_dev *sampleblk_dev)
 {
+	del_gendisk(sampleblk_dev->disk);
 	blk_cleanup_queue(sampleblk_dev->queue);
 	kfree(sampleblk_dev);
 }
