@@ -92,7 +92,7 @@ static int sampleblk_alloc(int minor)
 		rv = ENOMEM;
 		goto fail_queue;
 	}
-	smapleblk_dev->disk = disk;
+	sampleblk_dev->disk = disk;
 
 	disk->major = sampleblk_major;
 	disk->first_minor = minor;
