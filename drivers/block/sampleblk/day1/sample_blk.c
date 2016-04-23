@@ -93,6 +93,7 @@ static int sampleblk_alloc(int minor)
 		goto fail_queue;
 	}
 	sampleblk_dev->disk = disk;
+	pr_info("gendisk address %p\n", disk);
 
 	disk->major = sampleblk_major;
 	disk->first_minor = minor;
@@ -117,6 +118,7 @@ static void sampleblk_free(struct sampleblk_dev *sampleblk_dev)
 {
 	del_gendisk(sampleblk_dev->disk);
 	blk_cleanup_queue(sampleblk_dev->queue);
+	put_disk(sampleblk_dev->disk);
 	kfree(sampleblk_dev);
 }
 
