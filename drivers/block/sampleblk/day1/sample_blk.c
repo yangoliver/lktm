@@ -72,7 +72,7 @@ static int sampleblk_alloc(int minor)
 
 	sampleblk_dev = kzalloc(sizeof(sampleblk_dev), GFP_KERNEL);
 	if (!sampleblk_dev) {
-		rv = ENOMEM;
+		rv = -ENOMEM;
 		goto fail;
 	}
 
@@ -83,13 +83,13 @@ static int sampleblk_alloc(int minor)
 	sampleblk_dev->queue = blk_init_queue(sampleblk_request,
 	    &sampleblk_dev->lock);
 	if (!sampleblk_dev->queue) {
-		rv = ENOMEM;
+		rv = -ENOMEM;
 		goto fail_dev;
 	}
 
 	disk = alloc_disk(minor);
 	if (!disk) {
-		rv = ENOMEM;
+		rv = -ENOMEM;
 		goto fail_queue;
 	}
 	sampleblk_dev->disk = disk;
