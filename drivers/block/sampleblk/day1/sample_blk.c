@@ -24,23 +24,71 @@
 #include <linux/version.h>
 #include <linux/fs.h>
 #include <linux/slab.h>
+#include <linux/vmalloc.h>
 #include <linux/blkdev.h>
 
 static int sampleblk_major;
 #define SAMPLEBLK_MINOR	1
-static int sampleblk_size = CONFIG_BLK_DEV_RAM_SIZE;
+static int sampleblk_sect_size = 512;
+static int sampleblk_nsects = 1024;
 
 struct sampleblk_dev {
 	int minor;
 	spinlock_t lock;
 	struct request_queue *queue;
 	struct gendisk *disk;
+	ssize_t size;
+	void *data;
 };
 
 struct sampleblk_dev *sampleblk_dev = NULL;
 
-static void sampleblk_request(struct request_queue *rq)
+/*
+ * Handle an I/O request.
+ */
+static void sampleblk_handle_io(struct sampleblk_dev *sampleblk_dev,
+		uint64_t pos, ssize_t size, void *buffer, int write)
 {
+	if (write)
+		memcpy(sampleblk_dev->data + pos, buffer, size);
+	else
+		memcpy(buffer, sampleblk_dev->data + pos, size);
+}
+
+static void sampleblk_request(struct request_queue *q)
+{
+	struct request *rq = NULL;
+	struct bio_vec bvec;
+	struct req_iterator iter;
+	uint64_t pos = 0;
+	ssize_t size = 0;
+	void *kaddr = NULL;
+
+	while ((rq = blk_fetch_request(q)) != NULL) {
+		if (rq->cmd_type != REQ_TYPE_FS)
+			return
+
+		spin_unlock_irq(q->queue_lock);
+
+		BUG_ON(sampleblk_dev != rq->rq_disk->private_data);
+
+		pos = blk_rq_pos(rq) * sampleblk_sect_size;
+		size = blk_rq_bytes(rq);
+		if ((pos + size > sampleblk_dev->size)) {
+			pr_info("sampleblk: Beyond-end write (%llu %zx)\n", pos, size);
+			return;
+		}
+
+		rq_for_each_segment(bvec, rq, iter) {
+			kaddr = kmap(bvec.bv_page);
+			sampleblk_handle_io(sampleblk_dev, 
+				pos, bvec.bv_len, kaddr + bvec.bv_offset, rq_data_dir(rq));
+			pos += bvec.bv_len;
+			kunmap(bvec.bv_page);
+		}
+
+		spin_lock_irq(q->queue_lock);
+	}
 }
 
 static int sampleblk_ioctl(struct block_device *bdev, fmode_t mode,
@@ -76,15 +124,21 @@ static int sampleblk_alloc(int minor)
 		goto fail;
 	}
 
-	sampleblk_dev->minor = minor;
+	sampleblk_dev->size = sampleblk_sect_size * sampleblk_nsects;
+	sampleblk_dev->data = vmalloc(sampleblk_dev->size);
+	if (!sampleblk_dev->data) {
+		rv = -ENOMEM;
+		goto fail_dev;
+	}
 
+	sampleblk_dev->minor = minor;
 	spin_lock_init(&sampleblk_dev->lock);
 
 	sampleblk_dev->queue = blk_init_queue(sampleblk_request,
 	    &sampleblk_dev->lock);
 	if (!sampleblk_dev->queue) {
 		rv = -ENOMEM;
-		goto fail_dev;
+		goto fail_data;
 	}
 
 	disk = alloc_disk(minor);
@@ -101,13 +155,15 @@ static int sampleblk_alloc(int minor)
 	disk->private_data = sampleblk_dev;
 	disk->queue = sampleblk_dev->queue;
 	sprintf(disk->disk_name, "sampleblk%d", minor);
-	set_capacity(disk, sampleblk_size);
+	set_capacity(disk, sampleblk_nsects);
 	add_disk(disk);
 
 	return 0;
 
 fail_queue:
 	blk_cleanup_queue(sampleblk_dev->queue);
+fail_data:
+	vfree(sampleblk_dev->data);
 fail_dev:
 	kfree(sampleblk_dev);
 fail:
@@ -119,6 +175,7 @@ static void sampleblk_free(struct sampleblk_dev *sampleblk_dev)
 	del_gendisk(sampleblk_dev->disk);
 	blk_cleanup_queue(sampleblk_dev->queue);
 	put_disk(sampleblk_dev->disk);
+	vfree(sampleblk_dev->data);
 	kfree(sampleblk_dev);
 }
 
