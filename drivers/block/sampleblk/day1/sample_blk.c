@@ -46,46 +46,59 @@ struct sampleblk_dev *sampleblk_dev = NULL;
 /*
  * Handle an I/O request.
  */
-static void sampleblk_handle_io(struct sampleblk_dev *sampleblk_dev,
+static int sampleblk_handle_io(struct sampleblk_dev *sampleblk_dev,
 		uint64_t pos, ssize_t size, void *buffer, int write)
 {
 	if (write)
 		memcpy(sampleblk_dev->data + pos, buffer, size);
 	else
 		memcpy(buffer, sampleblk_dev->data + pos, size);
+
+	return 0;
 }
 
 static void sampleblk_request(struct request_queue *q)
 {
 	struct request *rq = NULL;
-	struct bio_vec bvec;
-	struct req_iterator iter;
+	int rv = 0;
 	uint64_t pos = 0;
 	ssize_t size = 0;
+	struct bio_vec bvec;
+	struct req_iterator iter;
 	void *kaddr = NULL;
 
 	while ((rq = blk_fetch_request(q)) != NULL) {
-		if (rq->cmd_type != REQ_TYPE_FS)
-			return
-
 		spin_unlock_irq(q->queue_lock);
+
+		if (rq->cmd_type != REQ_TYPE_FS) {
+			rv = -EIO;
+			goto skip;
+		}
 
 		BUG_ON(sampleblk_dev != rq->rq_disk->private_data);
 
 		pos = blk_rq_pos(rq) * sampleblk_sect_size;
 		size = blk_rq_bytes(rq);
 		if ((pos + size > sampleblk_dev->size)) {
-			pr_info("sampleblk: Beyond-end write (%llu %zx)\n", pos, size);
-			return;
+			pr_crit("sampleblk: Beyond-end write (%llu %zx)\n", pos, size);
+			rv = -EIO;
+			goto skip;
 		}
 
 		rq_for_each_segment(bvec, rq, iter) {
 			kaddr = kmap(bvec.bv_page);
-			sampleblk_handle_io(sampleblk_dev, 
+
+			rv = sampleblk_handle_io(sampleblk_dev, 
 				pos, bvec.bv_len, kaddr + bvec.bv_offset, rq_data_dir(rq));
+			if (rv < 0)
+				goto skip;
+
 			pos += bvec.bv_len;
 			kunmap(bvec.bv_page);
 		}
+skip:
+
+		blk_end_request_all(rq, rv);
 
 		spin_lock_irq(q->queue_lock);
 	}
@@ -118,7 +131,7 @@ static int sampleblk_alloc(int minor)
 	struct gendisk *disk;
 	int rv = 0;
 
-	sampleblk_dev = kzalloc(sizeof(sampleblk_dev), GFP_KERNEL);
+	sampleblk_dev = kzalloc(sizeof(struct sampleblk_dev), GFP_KERNEL);
 	if (!sampleblk_dev) {
 		rv = -ENOMEM;
 		goto fail;
