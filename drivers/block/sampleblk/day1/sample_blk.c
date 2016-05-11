@@ -44,7 +44,7 @@ struct sampleblk_dev {
 struct sampleblk_dev *sampleblk_dev = NULL;
 
 /*
- * Handle an I/O request.
+ * Do an I/O operation for each segment
  */
 static int sampleblk_handle_io(struct sampleblk_dev *sampleblk_dev,
 		uint64_t pos, ssize_t size, void *buffer, int write)
@@ -88,7 +88,7 @@ static void sampleblk_request(struct request_queue *q)
 		rq_for_each_segment(bvec, rq, iter) {
 			kaddr = kmap(bvec.bv_page);
 
-			rv = sampleblk_handle_io(sampleblk_dev, 
+			rv = sampleblk_handle_io(sampleblk_dev,
 				pos, bvec.bv_len, kaddr + bvec.bv_offset, rq_data_dir(rq));
 			if (rv < 0)
 				goto skip;
