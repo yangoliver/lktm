@@ -160,7 +160,6 @@ static int sampleblk_alloc(int minor)
 		goto fail_queue;
 	}
 	sampleblk_dev->disk = disk;
-	pr_info("gendisk address %p\n", disk);
 
 	disk->major = sampleblk_major;
 	disk->first_minor = minor;
