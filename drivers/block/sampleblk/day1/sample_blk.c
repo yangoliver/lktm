@@ -143,10 +143,9 @@ static int sampleblk_alloc(int minor)
 		rv = -ENOMEM;
 		goto fail_dev;
 	}
-
 	sampleblk_dev->minor = minor;
-	spin_lock_init(&sampleblk_dev->lock);
 
+	spin_lock_init(&sampleblk_dev->lock);
 	sampleblk_dev->queue = blk_init_queue(sampleblk_request,
 	    &sampleblk_dev->lock);
 	if (!sampleblk_dev->queue) {
