@@ -48,11 +48,10 @@ samplefs_put_super(struct super_block *sb)
 	}
 
 	unload_nls(sfs_sb->local_nls);
- 
+
 	/* FS-FILLIN your fs specific umount logic here */
 
 	kfree(sfs_sb);
-	return;
 }
 
 
@@ -67,7 +66,8 @@ samplefs_parse_mount_options(char *options, struct samplefs_sb_info *sfs_sb)
 {
 	char *value;
 	char *data;
-	int size;
+	unsigned long size;
+	int ret = 0;
 
 	if (!options)
 		return;
@@ -75,18 +75,27 @@ samplefs_parse_mount_options(char *options, struct samplefs_sb_info *sfs_sb)
 	while ((data = strsep(&options, ",")) != NULL) {
 		if (!*data)
 			continue;
-		if ((value = strchr(data, '=')) != NULL)
+		value = strchr(data, '=');
+		if (value != NULL)
 			*value++ = '\0';
 
 		if (strncasecmp(data, "rsize", 5) == 0) {
 			if (value && *value) {
-				size = simple_strtoul(value, &value, 0);
+				ret = kstrtoul(value, 0, &size);
+				if (ret) {
+					pr_err("kstrtoul error:%d\n", ret);
+					return;
+				}
 				if (size > 0)
 					sfs_sb->rsize = size;
 			}
 		} else if (strncasecmp(data, "wsize", 5) == 0) {
 			if (value && *value) {
-				size = simple_strtoul(value, &value, 0);
+				ret = kstrtoul(value, 0, &size);
+				if (ret) {
+					pr_err("kstrtoul error:%d\n", ret);
+					return;
+				}
 				if (size > 0)
 					sfs_sb->wsize = size;
 			}
@@ -131,43 +140,24 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 
 	/* below not needed for many fs - but an example of per fs sb data */
 	sfs_sb->local_nls = load_nls_default();
-	
+
 	samplefs_parse_mount_options(data, sfs_sb);
-	
+
 	/* FS-FILLIN your filesystem specific mount logic/checks here */
 
 	return 0;
 }
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
-static struct dentry *samplefs_mount(struct file_system_type *fs_type, int flags,
-	const char *dev_name, void *data)
+static struct dentry *samplefs_mount(struct file_system_type *fs_type,
+	int flags, const char *dev_name, void *data)
 {
 	return mount_nodev(fs_type, flags, data, samplefs_fill_super);
 }
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
-struct super_block * samplefs_get_sb(struct file_system_type *fs_type,
-	int flags, const char *dev_name, void *data)
-{
-	return get_sb_nodev(fs_type, flags, data, samplefs_fill_super);
-}
-#else
-int samplefs_get_sb(struct file_system_type *fs_type,
-	int flags, const char *dev_name, void *data, struct vfsmount *mnt)
-{
-	return get_sb_nodev(fs_type, flags, data, samplefs_fill_super, mnt);
-}
-#endif
-
 
 static struct file_system_type samplefs_fs_type = {
 	.owner = THIS_MODULE,
 	.name = "samplefs",
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
 	.mount = samplefs_mount,
-#else
-	.get_sb = samplefs_get_sb,
-#endif
 	.kill_sb = kill_anon_super,
 	/*  .fs_flags */
 };
