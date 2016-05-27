@@ -78,13 +78,13 @@ samplefs_parse_mount_options(char *options, struct samplefs_sb_info *sfs_sb)
 		if ((value = strchr(data, '=')) != NULL)
 			*value++ = '\0';
 
-		if (strnicmp(data, "rsize", 5) == 0) {
+		if (strncasecmp(data, "rsize", 5) == 0) {
 			if (value && *value) {
 				size = simple_strtoul(value, &value, 0);
 				if (size > 0)
 					sfs_sb->rsize = size;
 			}
-		} else if (strnicmp(data, "wsize", 5) == 0) {
+		} else if (strncasecmp(data, "wsize", 5) == 0) {
 			if (value && *value) {
 				size = simple_strtoul(value, &value, 0);
 				if (size > 0)
@@ -101,8 +101,8 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 	struct samplefs_sb_info *sfs_sb;
 
 	sb->s_maxbytes = MAX_LFS_FILESIZE; /* NB: may be too large for mem */
-	sb->s_blocksize = PAGE_CACHE_SIZE;
-	sb->s_blocksize_bits = PAGE_CACHE_SHIFT;
+	sb->s_blocksize = PAGE_SIZE;
+	sb->s_blocksize_bits = PAGE_SHIFT;
 	sb->s_magic = SAMPLEFS_MAGIC;
 	sb->s_op = &samplefs_super_ops;
 	sb->s_time_gran = 1; /* 1 nanosecond time granularity */
