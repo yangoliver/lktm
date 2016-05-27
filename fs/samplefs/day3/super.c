@@ -54,11 +54,10 @@ samplefs_put_super(struct super_block *sb)
 	}
 
 	unload_nls(sfs_sb->local_nls);
- 
+
 	/* FS-FILLIN your fs specific umount logic here */
 
 	kfree(sfs_sb);
-	return;
 }
 
 
@@ -73,46 +72,53 @@ samplefs_parse_mount_options(char *options, struct samplefs_sb_info *sfs_sb)
 {
 	char *value;
 	char *data;
-	int size;
+	unsigned long size;
+	int ret = 0;
 
 	if (!options)
 		return;
 
-	printk(KERN_INFO "samplefs: parsing mount options %s\n", options);
+	pr_info("samplefs: parsing mount options %s\n", options);
 
 	while ((data = strsep(&options, ",")) != NULL) {
 		if (!*data)
 			continue;
-		if ((value = strchr(data, '=')) != NULL)
+		value = strchr(data, '=');
+		if (value != NULL)
 			*value++ = '\0';
 
 		if (strncasecmp(data, "rsize", 5) == 0) {
 			if (value && *value) {
-				size = simple_strtoul(value, &value, 0);
+				ret = kstrtoul(value, 0, &size);
+				if (ret) {
+					pr_err("kstrtoul error:%d\n", ret);
+					return;
+				}
 				if (size > 0) {
 					sfs_sb->rsize = size;
-					printk(KERN_INFO
-						"samplefs: rsize %d\n", size);
+					pr_info("samplefs: rsize %lu\n", size);
 				}
 
 			}
 		} else if (strncasecmp(data, "wsize", 5) == 0) {
 			if (value && *value) {
-				size = simple_strtoul(value, &value, 0);
+				ret  = kstrtoul(value, 0, &size);
+				if (ret) {
+					pr_err("kstrtoul error:%d\n", ret);
+					return;
+				}
 				if (size > 0) {
 					sfs_sb->wsize = size;
-					printk(KERN_INFO
-						"samplefs: wsize %d\n", size);
+					pr_info("samplefs: wsize %lu\n", size);
 				}
 			}
 		} else {
-			printk(KERN_WARNING "samplefs: bad mount option %s\n",
-				data);
+			pr_warn("samplefs: bad mount option %s\n", data);
 		}
 	}
 }
 
-static int samplefs_fill_super(struct super_block *sb, void * data, int silent)
+static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 {
 	struct inode *inode;
 	struct samplefs_sb_info *sfs_sb;
@@ -125,7 +131,7 @@ static int samplefs_fill_super(struct super_block *sb, void * data, int silent)
 	sb->s_time_gran = 1; /* 1 nanosecond time granularity */
 
 
-	printk(KERN_INFO "samplefs: fill super\n");
+	pr_info("samplefs: fill super\n");
 
 /* Eventually replace iget with:
 	inode = samplefs_get_inode(sb, S_IFDIR | 0755, 0); */
@@ -136,7 +142,7 @@ static int samplefs_fill_super(struct super_block *sb, void * data, int silent)
 		return -ENOMEM;
 
 #ifdef CONFIG_SAMPLEFS_DEBUG
-	printk(KERN_INFO "samplefs: about to alloc s_fs_info\n");
+	pr_info("samplefs: about to alloc s_fs_info\n");
 #endif
 	sb->s_fs_info = kzalloc(sizeof(struct samplefs_sb_info), GFP_KERNEL);
 	sfs_sb = SFS_SB(sb);
@@ -146,7 +152,7 @@ static int samplefs_fill_super(struct super_block *sb, void * data, int silent)
 	}
 
 
-	printk(KERN_INFO "samplefs: about to alloc root inode\n");
+	pr_info("samplefs: about to alloc root inode\n");
 
 	sb->s_root = d_make_root(inode);
 	if (!sb->s_root) {
@@ -154,46 +160,27 @@ static int samplefs_fill_super(struct super_block *sb, void * data, int silent)
 		kfree(sfs_sb);
 		return -ENOMEM;
 	}
-	
+
 	/* below not needed for many fs - but an example of per fs sb data */
 	sfs_sb->local_nls = load_nls_default();
 
 	samplefs_parse_mount_options(data, sfs_sb);
-	
+
 	/* FS-FILLIN your filesystem specific mount logic/checks here */
 
 	return 0;
 }
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
-static struct dentry *samplefs_mount(struct file_system_type *fs_type, int flags,
-	const char *dev_name, void *data)
+static struct dentry *samplefs_mount(struct file_system_type *fs_type,
+	int flags, const char *dev_name, void *data)
 {
 	return mount_nodev(fs_type, flags, data, samplefs_fill_super);
 }
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
-struct super_block * samplefs_get_sb(struct file_system_type *fs_type,
-	int flags, const char *dev_name, void *data)
-{
-	return get_sb_nodev(fs_type, flags, data, samplefs_fill_super);
-}
-#else
-int samplefs_get_sb(struct file_system_type *fs_type,
-	int flags, const char *dev_name, void *data, struct vfsmount *mnt)
-{
-	return get_sb_nodev(fs_type, flags, data, samplefs_fill_super, mnt);
-}
-#endif
-
 
 static struct file_system_type samplefs_fs_type = {
 	.owner = THIS_MODULE,
 	.name = "samplefs",
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,39)
 	.mount = samplefs_mount,
-#else
-	.get_sb = samplefs_get_sb,
-#endif
 	.kill_sb = kill_anon_super,
 	/*  .fs_flags */
 };
@@ -213,15 +200,15 @@ samplefs_debug_data_proc_show(struct seq_file *m, void *v)
 
 static int samplefs_debug_data_proc_open(struct inode *inode, struct file *file)
 {
-    return single_open(file, samplefs_debug_data_proc_show, NULL);
+	return single_open(file, samplefs_debug_data_proc_show, NULL);
 }
 
-static const struct file_operations samplefs_debug_data_proc_fops = { 
-    .owner      = THIS_MODULE,
-    .open       = samplefs_debug_data_proc_open,
-    .read       = seq_read,
-    .llseek     = seq_lseek,
-    .release    = single_release,
+static const struct file_operations samplefs_debug_data_proc_fops = {
+	.owner      = THIS_MODULE,
+	.open       = samplefs_debug_data_proc_open,
+	.read       = seq_read,
+	.llseek     = seq_lseek,
+	.release    = single_release,
 };
 
 void
@@ -248,15 +235,14 @@ sfs_proc_clean(void)
 
 static int __init init_samplefs_fs(void)
 {
-	printk(KERN_INFO "init samplefs\n");
+	pr_info("init samplefs\n");
 #ifdef CONFIG_PROC_FS
 	sfs_proc_init();
 #endif
 
 	/* some filesystems pass optional parms at load time */
 	if (sample_parm > 256) {
-		printk(KERN_ERR "sample_parm %d too large, reset to 10\n",
-			sample_parm);
+		pr_err("sample_parm %d too large, reset to 10\n", sample_parm);
 		sample_parm = 10;
 	}
 
@@ -265,7 +251,7 @@ static int __init init_samplefs_fs(void)
 
 static void __exit exit_samplefs_fs(void)
 {
-	printk(KERN_INFO "unloading samplefs\n");
+	pr_info("unloading samplefs\n");
 #ifdef CONFIG_PROC_FS
 	sfs_proc_clean();
 #endif
