@@ -214,7 +214,7 @@ static const struct file_operations samplefs_debug_data_proc_fops = {
 void
 sfs_proc_init(void)
 {
-	proc_fs_samplefs = proc_mkdir("samplefs", NULL);
+	proc_fs_samplefs = proc_mkdir("fs/samplefs", NULL);
 	if (proc_fs_samplefs == NULL)
 		return;
 
@@ -229,7 +229,7 @@ sfs_proc_clean(void)
 		return;
 
 	remove_proc_entry("DebugData", proc_fs_samplefs);
-	remove_proc_entry("samplefs", NULL);
+	remove_proc_entry("fs/samplefs", NULL);
 }
 #endif /* CONFIG_PROC_FS */
 
