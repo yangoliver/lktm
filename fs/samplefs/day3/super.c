@@ -102,7 +102,7 @@ samplefs_parse_mount_options(char *options, struct samplefs_sb_info *sfs_sb)
 			}
 		} else if (strncasecmp(data, "wsize", 5) == 0) {
 			if (value && *value) {
-				ret  = kstrtoul(value, 0, &size);
+				ret = kstrtoul(value, 0, &size);
 				if (ret) {
 					pr_err("kstrtoul error:%d\n", ret);
 					return;
@@ -260,5 +260,4 @@ static void __exit exit_samplefs_fs(void)
 
 module_init(init_samplefs_fs)
 module_exit(exit_samplefs_fs)
-
 MODULE_LICENSE("GPL");
