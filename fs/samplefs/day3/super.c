@@ -141,6 +141,8 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 	if (!inode)
 		return -ENOMEM;
 
+	unlock_new_inode(inode);
+
 #ifdef CONFIG_SAMPLEFS_DEBUG
 	pr_info("samplefs: about to alloc s_fs_info\n");
 #endif
