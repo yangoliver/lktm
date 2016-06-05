@@ -124,6 +124,8 @@ static int samplefs_fill_super(struct super_block *sb, void *data, int silent)
 	if (!inode)
 		return -ENOMEM;
 
+	unlock_new_inode(inode);
+
 	sb->s_fs_info = kzalloc(sizeof(struct samplefs_sb_info), GFP_KERNEL);
 	sfs_sb = SFS_SB(sb);
 	if (!sfs_sb) {
