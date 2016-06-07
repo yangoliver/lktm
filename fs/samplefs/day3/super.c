@@ -237,7 +237,7 @@ sfs_proc_clean(void)
 
 static int __init init_samplefs_fs(void)
 {
-	pr_info("init samplefs\n");
+	pr_info("samplefs: init moudle\n");
 #ifdef CONFIG_PROC_FS
 	sfs_proc_init();
 #endif
@@ -253,7 +253,7 @@ static int __init init_samplefs_fs(void)
 
 static void __exit exit_samplefs_fs(void)
 {
-	pr_info("unloading samplefs\n");
+	pr_info("samplefs: unload moudle\n");
 #ifdef CONFIG_PROC_FS
 	sfs_proc_clean();
 #endif
