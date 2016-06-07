@@ -190,8 +190,7 @@ static struct file_system_type samplefs_fs_type = {
 #ifdef CONFIG_PROC_FS
 static struct proc_dir_entry *proc_fs_samplefs;
 
-static int
-samplefs_debug_data_proc_show(struct seq_file *m, void *v)
+static int samplefs_debug_data_proc_show(struct seq_file *m, void *v)
 {
 	seq_puts(m,
 			"Display Debugging Information\n"
@@ -213,8 +212,7 @@ static const struct file_operations samplefs_debug_data_proc_fops = {
 	.release    = single_release,
 };
 
-void
-sfs_proc_init(void)
+void sfs_proc_init(void)
 {
 	proc_fs_samplefs = proc_mkdir("fs/samplefs", NULL);
 	if (proc_fs_samplefs == NULL)
@@ -224,8 +222,7 @@ sfs_proc_init(void)
 	    &samplefs_debug_data_proc_fops);
 }
 
-void
-sfs_proc_clean(void)
+void sfs_proc_clean(void)
 {
 	if (proc_fs_samplefs == NULL)
 		return;
