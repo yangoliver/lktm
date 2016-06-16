@@ -30,7 +30,7 @@
 static int sampleblk_major;
 #define SAMPLEBLK_MINOR	1
 static int sampleblk_sect_size = 512;
-static int sampleblk_nsects = 1024;
+static int sampleblk_nsects = 10 * 1024;
 
 struct sampleblk_dev {
 	int minor;
@@ -80,7 +80,8 @@ static void sampleblk_request(struct request_queue *q)
 		pos = blk_rq_pos(rq) * sampleblk_sect_size;
 		size = blk_rq_bytes(rq);
 		if ((pos + size > sampleblk_dev->size)) {
-			pr_crit("sampleblk: Beyond-end write (%llu %zx)\n", pos, size);
+			pr_crit("sampleblk: Beyond-end write (%llu %zx)\n",
+				pos, size);
 			rv = -EIO;
 			goto skip;
 		}
@@ -88,8 +89,9 @@ static void sampleblk_request(struct request_queue *q)
 		rq_for_each_segment(bvec, rq, iter) {
 			kaddr = kmap(bvec.bv_page);
 
-			rv = sampleblk_handle_io(sampleblk_dev,
-				pos, bvec.bv_len, kaddr + bvec.bv_offset, rq_data_dir(rq));
+			rv = sampleblk_handle_io(sampleblk_dev, pos,
+				bvec.bv_len, kaddr + bvec.bv_offset,
+				rq_data_dir(rq));
 			if (rv < 0)
 				goto skip;
 
