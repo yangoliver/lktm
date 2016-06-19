@@ -1,0 +1,15 @@
+; -- start job file --
+[global]            ; global shared parameters
+filename=/mnt/test  ; location of file in file system
+rw=write            ; sequential write only, no read
+ioengine=sync       ; synchronized, write(2) system call
+bs=,4k              ; fio iounit size, write=4k, read and trim are default(4k)
+iodepth=1           ; how many in-flight io unit
+size=2M             ; total size of file io in one job
+loops=1000000       ; number of iterations of one job
+
+[job1]              ; job1 specific parameters
+
+[job2]              ; job2 specific parameters
+
+; -- end job file --
