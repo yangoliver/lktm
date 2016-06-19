@@ -1,0 +1,1230 @@
+# sudo ./funcgraph -d 1 -p 95069 SyS_open
+
+Tracing "SyS_open" for PID 95069 for 1 seconds...
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.026 us    |            _cond_resched();
+   0)   0.699 us    |          }
+   0)   0.926 us    |        }
+   0)   1.101 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.029 us    |          _raw_spin_lock();
+   0)   0.025 us    |          expand_files();
+   0)   0.453 us    |        }
+   0)   0.631 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.021 us    |              _cond_resched();
+   0)   0.279 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.022 us    |                  _cond_resched();
+   0)   0.220 us    |                }
+   0)   0.394 us    |              }
+   0)   0.615 us    |            }
+   0)   0.025 us    |            __mutex_init();
+   0)   1.471 us    |          }
+   0)               |          path_init() {
+   0)   0.123 us    |            set_root();
+   0)   0.023 us    |            nd_jump_root();
+   0)   0.517 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.061 us    |                    __inode_security_revalidate();
+   0)   0.302 us    |                  }
+   0)   0.520 us    |                }
+   0)   0.894 us    |              }
+   0)   1.070 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.258 us    |                __d_lookup_rcu();
+   0)   0.082 us    |                __lookup_mnt();
+   0)   0.764 us    |              }
+   0)   0.934 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.025 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.057 us    |                    __inode_security_revalidate();
+   0)   0.361 us    |                  }
+   0)   0.553 us    |                }
+   0)   0.905 us    |              }
+   0)   1.114 us    |            }
+   0)   3.719 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.026 us    |                __legitimize_mnt();
+   0)   0.220 us    |              }
+   0)   0.473 us    |            }
+   0)   0.646 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.020 us    |                _cond_resched();
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.364 us    |              }
+   0)   0.542 us    |            }
+   0)   0.045 us    |            __mnt_want_write();
+   0)   0.911 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.194 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.020 us    |                _raw_spin_lock();
+   0)   0.674 us    |              }
+   0)   0.888 us    |            }
+   0)   1.096 us    |          }
+   0)   0.022 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.021 us    |                update_fast_ctr();
+   0)   0.234 us    |              }
+   0)   0.405 us    |            }
+   0)   0.585 us    |          }
+   0)   0.067 us    |          follow_managed();
+   0)   0.022 us    |          mntget();
+   0)   0.029 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.027 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.023 us    |                      _cond_resched();
+   0)   0.203 us    |                    }
+   0)   0.466 us    |                  }
+   0)   0.629 us    |                }
+   0)   1.013 us    |              }
+   0)   1.202 us    |            }
+   0)   1.379 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.021 us    |                mntget();
+   0)   0.198 us    |              }
+   0)   0.048 us    |              __mnt_want_write();
+   0)   0.029 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.022 us    |                    _cond_resched();
+   0)   0.198 us    |                  }
+   0)   0.021 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.050 us    |                    avc_has_perm();
+   0)   0.233 us    |                  }
+   0)   0.934 us    |                }
+   0)   0.027 us    |                __fsnotify_parent();
+   0)   0.024 us    |                fsnotify();
+   0)   1.509 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.024 us    |                dget_parent();
+   0)   0.024 us    |                dput();
+   0)   0.022 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.022 us    |                  generic_file_open();
+   0)   0.040 us    |                  __dquot_initialize();
+   0)   0.426 us    |                }
+   0)   1.260 us    |              }
+   0)   0.030 us    |              file_ra_state_init();
+   0)   4.236 us    |            }
+   0)   4.429 us    |          }
+   0)   0.031 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.027 us    |            process_measurement();
+   0)   0.203 us    |          }
+   0)   0.023 us    |          dput();
+   0)               |          mntput() {
+   0)   0.023 us    |            mntput_no_expire();
+   0)   0.190 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.022 us    |            drop_links.isra.19();
+   0)   0.026 us    |            dput();
+   0)               |            mntput() {
+   0)   0.022 us    |              mntput_no_expire();
+   0)   0.444 us    |            }
+   0)   0.996 us    |          }
+   0) + 19.906 us   |        }
+   0)   0.030 us    |        restore_nameidata();
+   0) + 20.385 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.028 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.021 us    |          _cond_resched();
+   0)   0.196 us    |        }
+   0)   0.361 us    |      }
+   0)               |      putname() {
+   0)   0.046 us    |        kmem_cache_free();
+   0)   0.231 us    |      }
+   0) + 24.060 us   |    }
+   0) + 24.409 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.035 us    |            _cond_resched();
+   0)   0.286 us    |          }
+   0)   0.502 us    |        }
+   0)   0.696 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.026 us    |          _raw_spin_lock();
+   0)   0.027 us    |          expand_files();
+   0)   0.413 us    |        }
+   0)   0.589 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.023 us    |              _cond_resched();
+   0)   0.264 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.022 us    |                  _cond_resched();
+   0)   0.211 us    |                }
+   0)   0.390 us    |              }
+   0)   0.592 us    |            }
+   0)   0.023 us    |            __mutex_init();
+   0)   1.383 us    |          }
+   0)               |          path_init() {
+   0)   0.083 us    |            set_root();
+   0)   0.022 us    |            nd_jump_root();
+   0)   0.453 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.024 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.056 us    |                    __inode_security_revalidate();
+   0)   0.314 us    |                  }
+   0)   0.532 us    |                }
+   0)   0.894 us    |              }
+   0)   1.122 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.228 us    |                __d_lookup_rcu();
+   0)   0.069 us    |                __lookup_mnt();
+   0)   0.711 us    |              }
+   0)   0.887 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.031 us    |                    __inode_security_revalidate();
+   0)   0.272 us    |                  }
+   0)   0.447 us    |                }
+   0)   0.814 us    |              }
+   0)   1.040 us    |            }
+   0)   3.554 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.023 us    |                __legitimize_mnt();
+   0)   0.431 us    |              }
+   0)   0.639 us    |            }
+   0)   1.035 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.022 us    |                _cond_resched();
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.355 us    |              }
+   0)   0.531 us    |            }
+   0)   0.040 us    |            __mnt_want_write();
+   0)   0.932 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.195 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.026 us    |                _raw_spin_lock();
+   0)   0.321 us    |              }
+   0)   0.496 us    |            }
+   0)   0.662 us    |          }
+   0)   0.021 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.022 us    |                update_fast_ctr();
+   0)   0.184 us    |              }
+   0)   0.351 us    |            }
+   0)   0.570 us    |          }
+   0)   0.029 us    |          follow_managed();
+   0)   0.022 us    |          mntget();
+   0)   0.035 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.026 us    |                      _cond_resched();
+   0)   0.197 us    |                    }
+   0)   0.452 us    |                  }
+   0)   0.617 us    |                }
+   0)   0.976 us    |              }
+   0)   1.158 us    |            }
+   0)   1.347 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.021 us    |                mntget();
+   0)   0.199 us    |              }
+   0)   0.039 us    |              __mnt_want_write();
+   0)   0.030 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.023 us    |                    _cond_resched();
+   0)   0.206 us    |                  }
+   0)   0.025 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.038 us    |                    avc_has_perm();
+   0)   0.211 us    |                  }
+   0)   0.948 us    |                }
+   0)   0.024 us    |                __fsnotify_parent();
+   0)   0.028 us    |                fsnotify();
+   0)   1.512 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.029 us    |                dget_parent();
+   0)   0.025 us    |                dput();
+   0)   0.021 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.026 us    |                  generic_file_open();
+   0)   0.025 us    |                  __dquot_initialize();
+   0)   0.395 us    |                }
+   0)   1.166 us    |              }
+   0)   0.030 us    |              file_ra_state_init();
+   0)   4.140 us    |            }
+   0)   4.331 us    |          }
+   0)   0.024 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.027 us    |            process_measurement();
+   0)   0.190 us    |          }
+   0)   0.023 us    |          dput();
+   0)               |          mntput() {
+   0)   0.026 us    |            mntput_no_expire();
+   0)   0.208 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.024 us    |            drop_links.isra.19();
+   0)   0.022 us    |            dput();
+   0)               |            mntput() {
+   0)   0.020 us    |              mntput_no_expire();
+   0)   0.196 us    |            }
+   0)   0.707 us    |          }
+   0) + 18.828 us   |        }
+   0)   0.027 us    |        restore_nameidata();
+   0) + 19.226 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.027 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.025 us    |          _cond_resched();
+   0)   0.196 us    |        }
+   0)   0.379 us    |      }
+   0)               |      putname() {
+   0)   0.159 us    |        kmem_cache_free();
+   0)   0.354 us    |      }
+   0) + 22.452 us   |    }
+   0) + 22.738 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.036 us    |            _cond_resched();
+   0)   0.295 us    |          }
+   0)   0.507 us    |        }
+   0)   0.702 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.026 us    |          _raw_spin_lock();
+   0)   0.024 us    |          expand_files();
+   0)   0.407 us    |        }
+   0)   0.588 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.024 us    |              _cond_resched();
+   0)   0.279 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.022 us    |                  _cond_resched();
+   0)   0.231 us    |                }
+   0)   0.430 us    |              }
+   0)   0.668 us    |            }
+   0)   0.025 us    |            __mutex_init();
+   0)   1.460 us    |          }
+   0)               |          path_init() {
+   0)   0.111 us    |            set_root();
+   0)   0.023 us    |            nd_jump_root();
+   0)   0.478 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.063 us    |                    __inode_security_revalidate();
+   0)   0.336 us    |                  }
+   0)   0.538 us    |                }
+   0)   0.897 us    |              }
+   0)   1.103 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.236 us    |                __d_lookup_rcu();
+   0)   0.070 us    |                __lookup_mnt();
+   0)   0.881 us    |              }
+   0)   1.054 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.024 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.072 us    |                    __inode_security_revalidate();
+   0)   0.296 us    |                  }
+   0)   0.469 us    |                }
+   0)   0.849 us    |              }
+   0)   1.044 us    |            }
+   0)   3.990 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.022 us    |                __legitimize_mnt();
+   0)   0.203 us    |              }
+   0)   0.393 us    |            }
+   0)   0.584 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.026 us    |                _cond_resched();
+   0)   0.026 us    |                update_fast_ctr();
+   0)   0.399 us    |              }
+   0)   0.591 us    |            }
+   0)   0.040 us    |            __mnt_want_write();
+   0)   0.962 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.193 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.025 us    |                _raw_spin_lock();
+   0)   0.318 us    |              }
+   0)   0.485 us    |            }
+   0)   0.655 us    |          }
+   0)   0.024 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.188 us    |              }
+   0)   0.351 us    |            }
+   0)   0.530 us    |          }
+   0)   0.025 us    |          follow_managed();
+   0)   0.021 us    |          mntget();
+   0)   0.031 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.027 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.025 us    |                      _cond_resched();
+   0)   0.200 us    |                    }
+   0)   0.450 us    |                  }
+   0)   0.608 us    |                }
+   0)   0.970 us    |              }
+   0)   1.144 us    |            }
+   0)   1.332 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.027 us    |                mntget();
+   0)   0.197 us    |              }
+   0)   0.037 us    |              __mnt_want_write();
+   0)   0.021 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.022 us    |                    _cond_resched();
+   0)   0.270 us    |                  }
+   0)   0.025 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.039 us    |                    avc_has_perm();
+   0)   0.209 us    |                  }
+   0)   1.229 us    |                }
+   0)   0.022 us    |                __fsnotify_parent();
+   0)   0.025 us    |                fsnotify();
+   0)   1.876 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.024 us    |                dget_parent();
+   0)   0.027 us    |                dput();
+   0)   0.027 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.023 us    |                  generic_file_open();
+   0)   0.025 us    |                  __dquot_initialize();
+   0)   0.384 us    |                }
+   0)   1.132 us    |              }
+   0)   0.036 us    |              file_ra_state_init();
+   0)   4.643 us    |            }
+   0)   4.815 us    |          }
+   0)   0.025 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.021 us    |            process_measurement();
+   0)   0.184 us    |          }
+   0)   0.027 us    |          dput();
+   0)               |          mntput() {
+   0)   0.024 us    |            mntput_no_expire();
+   0)   0.187 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.021 us    |            drop_links.isra.19();
+   0)   0.028 us    |            dput();
+   0)               |            mntput() {
+   0)   0.022 us    |              mntput_no_expire();
+   0)   0.223 us    |            }
+   0)   0.745 us    |          }
+   0) + 19.187 us   |        }
+   0)   0.026 us    |        restore_nameidata();
+   0) + 19.561 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.026 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.023 us    |          _cond_resched();
+   0)   0.199 us    |        }
+   0)   0.366 us    |      }
+   0)               |      putname() {
+   0)   0.072 us    |        kmem_cache_free();
+   0)   0.271 us    |      }
+   0) + 22.746 us   |    }
+   0) + 23.021 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.033 us    |            _cond_resched();
+   0)   0.303 us    |          }
+   0)   0.506 us    |        }
+   0)   0.684 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.022 us    |          _raw_spin_lock();
+   0)   0.034 us    |          expand_files();
+   0)   0.452 us    |        }
+   0)   0.635 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.025 us    |              _cond_resched();
+   0)   0.216 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.024 us    |                  _cond_resched();
+   0)   0.208 us    |                }
+   0)   0.592 us    |              }
+   0)   0.802 us    |            }
+   0)   0.032 us    |            __mutex_init();
+   0)   1.623 us    |          }
+   0)               |          path_init() {
+   0)   0.104 us    |            set_root();
+   0)   0.021 us    |            nd_jump_root();
+   0)   0.478 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.025 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.050 us    |                    __inode_security_revalidate();
+   0)   0.317 us    |                  }
+   0)   0.540 us    |                }
+   0)   0.914 us    |              }
+   0)   1.102 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.290 us    |                __d_lookup_rcu();
+   0)   0.065 us    |                __lookup_mnt();
+   0)   0.778 us    |              }
+   0)   0.947 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.059 us    |                    __inode_security_revalidate();
+   0)   0.288 us    |                  }
+   0)   0.457 us    |                }
+   0)   0.804 us    |              }
+   0)   0.992 us    |            }
+   0)   3.585 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.027 us    |                __legitimize_mnt();
+   0)   0.192 us    |              }
+   0)   0.410 us    |            }
+   0)   0.610 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.026 us    |                _cond_resched();
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.390 us    |              }
+   0)   0.581 us    |            }
+   0)   0.044 us    |            __mnt_want_write();
+   0)   1.010 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.194 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.021 us    |                _raw_spin_lock();
+   0)   0.334 us    |              }
+   0)   0.518 us    |            }
+   0)   0.700 us    |          }
+   0)   0.025 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.020 us    |                update_fast_ctr();
+   0)   0.199 us    |              }
+   0)   0.382 us    |            }
+   0)   0.558 us    |          }
+   0)   0.024 us    |          follow_managed();
+   0)   0.022 us    |          mntget();
+   0)   0.022 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.028 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.022 us    |                      _cond_resched();
+   0)   0.323 us    |                    }
+   0)   0.610 us    |                  }
+   0)   0.775 us    |                }
+   0)   1.147 us    |              }
+   0)   1.319 us    |            }
+   0)   1.518 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.023 us    |                mntget();
+   0)   0.200 us    |              }
+   0)   0.039 us    |              __mnt_want_write();
+   0)   0.025 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.023 us    |                    _cond_resched();
+   0)   0.201 us    |                  }
+   0)   0.022 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.038 us    |                    avc_has_perm();
+   0)   0.206 us    |                  }
+   0)   0.939 us    |                }
+   0)   0.026 us    |                __fsnotify_parent();
+   0)   0.023 us    |                fsnotify();
+   0)   1.502 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.039 us    |                dget_parent();
+   0)   0.024 us    |                dput();
+   0)   0.023 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.022 us    |                  generic_file_open();
+   0)   0.027 us    |                  __dquot_initialize();
+   0)   0.386 us    |                }
+   0)   1.173 us    |              }
+   0)   0.030 us    |              file_ra_state_init();
+   0)   4.028 us    |            }
+   0)   4.205 us    |          }
+   0)   0.027 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.026 us    |            process_measurement();
+   0)   0.201 us    |          }
+   0)   0.024 us    |          dput();
+   0)               |          mntput() {
+   0)   0.023 us    |            mntput_no_expire();
+   0)   0.195 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.022 us    |            drop_links.isra.19();
+   0)   0.025 us    |            dput();
+   0)               |            mntput() {
+   0)   0.022 us    |              mntput_no_expire();
+   0)   0.188 us    |            }
+   0)   0.724 us    |          }
+   0) + 18.873 us   |        }
+   0)   0.027 us    |        restore_nameidata();
+   0) + 19.260 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.025 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.023 us    |          _cond_resched();
+   0)   0.195 us    |        }
+   0)   0.368 us    |      }
+   0)               |      putname() {
+   0)   0.079 us    |        kmem_cache_free();
+   0)   0.276 us    |      }
+   0) + 22.502 us   |    }
+   0) + 22.818 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.024 us    |            _cond_resched();
+   0)   0.288 us    |          }
+   0)   0.807 us    |        }
+   0)   0.984 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.026 us    |          _raw_spin_lock();
+   0)   0.027 us    |          expand_files();
+   0)   0.403 us    |        }
+   0)   0.583 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.023 us    |              _cond_resched();
+   0)   0.220 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.021 us    |                  _cond_resched();
+   0)   0.207 us    |                }
+   0)   0.405 us    |              }
+   0)   0.633 us    |            }
+   0)   0.022 us    |            __mutex_init();
+   0)   1.375 us    |          }
+   0)               |          path_init() {
+   0)   0.101 us    |            set_root();
+   0)   0.022 us    |            nd_jump_root();
+   0)   0.483 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.028 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.071 us    |                    __inode_security_revalidate();
+   0)   0.359 us    |                  }
+   0)   0.581 us    |                }
+   0)   0.949 us    |              }
+   0)   1.141 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.250 us    |                __d_lookup_rcu();
+   0)   0.068 us    |                __lookup_mnt();
+   0)   0.714 us    |              }
+   0)   0.889 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.024 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.068 us    |                    __inode_security_revalidate();
+   0)   0.300 us    |                  }
+   0)   0.471 us    |                }
+   0)   0.834 us    |              }
+   0)   1.021 us    |            }
+   0)   3.556 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.024 us    |                __legitimize_mnt();
+   0)   0.195 us    |              }
+   0)   0.382 us    |            }
+   0)   0.560 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.023 us    |                _cond_resched();
+   0)   0.024 us    |                update_fast_ctr();
+   0)   0.355 us    |              }
+   0)   0.540 us    |            }
+   0)   0.086 us    |            __mnt_want_write();
+   0)   1.021 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.021 us    |            _cond_resched();
+   0)   0.236 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.021 us    |                _raw_spin_lock();
+   0)   0.338 us    |              }
+   0)   0.505 us    |            }
+   0)   0.876 us    |          }
+   0)   0.026 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.192 us    |              }
+   0)   0.356 us    |            }
+   0)   0.533 us    |          }
+   0)   0.023 us    |          follow_managed();
+   0)   0.020 us    |          mntget();
+   0)   0.024 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.023 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.022 us    |                      _cond_resched();
+   0)   0.207 us    |                    }
+   0)   0.483 us    |                  }
+   0)   0.649 us    |                }
+   0)   0.984 us    |              }
+   0)   1.148 us    |            }
+   0)   1.350 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.022 us    |                mntget();
+   0)   0.192 us    |              }
+   0)   0.039 us    |              __mnt_want_write();
+   0)   0.021 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.022 us    |                    _cond_resched();
+   0)   0.195 us    |                  }
+   0)   0.021 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.030 us    |                    avc_has_perm();
+   0)   0.198 us    |                  }
+   0)   0.892 us    |                }
+   0)   0.024 us    |                __fsnotify_parent();
+   0)   0.027 us    |                fsnotify();
+   0)   1.473 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.043 us    |                dget_parent();
+   0)   0.024 us    |                dput();
+   0)   0.027 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.021 us    |                  generic_file_open();
+   0)   0.025 us    |                  __dquot_initialize();
+   0)   0.393 us    |                }
+   0)   1.190 us    |              }
+   0)   0.031 us    |              file_ra_state_init();
+   0)   3.970 us    |            }
+   0)   4.147 us    |          }
+   0)   0.025 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.026 us    |            process_measurement();
+   0)   0.190 us    |          }
+   0)   0.028 us    |          dput();
+   0)               |          mntput() {
+   0)   0.023 us    |            mntput_no_expire();
+   0)   0.190 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.025 us    |            drop_links.isra.19();
+   0)   0.026 us    |            dput();
+   0)               |            mntput() {
+   0)   0.023 us    |              mntput_no_expire();
+   0)   0.186 us    |            }
+   0)   0.700 us    |          }
+   0) + 18.735 us   |        }
+   0)   0.079 us    |        restore_nameidata();
+   0) + 19.178 us   |      }
+   0)   0.057 us    |      __fsnotify_parent();
+   0)   0.024 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.023 us    |          _cond_resched();
+   0)   0.194 us    |        }
+   0)   0.509 us    |      }
+   0)               |      putname() {
+   0)   0.089 us    |        kmem_cache_free();
+   0)   0.267 us    |      }
+   0) + 22.911 us   |    }
+   0) + 23.180 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.035 us    |            _cond_resched();
+   0)   0.284 us    |          }
+   0)   0.514 us    |        }
+   0)   0.699 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.023 us    |          _raw_spin_lock();
+   0)   0.024 us    |          expand_files();
+   0)   0.438 us    |        }
+   0)   0.614 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.022 us    |              _cond_resched();
+   0)   0.221 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.021 us    |                  _cond_resched();
+   0)   0.203 us    |                }
+   0)   0.377 us    |              }
+   0)   0.582 us    |            }
+   0)   0.023 us    |            __mutex_init();
+   0)   1.367 us    |          }
+   0)               |          path_init() {
+   0)   0.104 us    |            set_root();
+   0)   0.023 us    |            nd_jump_root();
+   0)   0.478 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.023 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.051 us    |                    __inode_security_revalidate();
+   0)   0.291 us    |                  }
+   0)   0.512 us    |                }
+   0)   0.880 us    |              }
+   0)   1.072 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.259 us    |                __d_lookup_rcu();
+   0)   0.068 us    |                __lookup_mnt();
+   0)   0.743 us    |              }
+   0)   0.918 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.025 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.063 us    |                    __inode_security_revalidate();
+   0)   0.291 us    |                  }
+   0)   0.463 us    |                }
+   0)   0.805 us    |              }
+   0)   0.988 us    |            }
+   0)   3.488 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.022 us    |                __legitimize_mnt();
+   0)   0.193 us    |              }
+   0)   0.519 us    |            }
+   0)   0.698 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.022 us    |                _cond_resched();
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.376 us    |              }
+   0)   0.542 us    |            }
+   0)   0.039 us    |            __mnt_want_write();
+   0)   0.950 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.190 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.022 us    |                _raw_spin_lock();
+   0)   0.294 us    |              }
+   0)   0.476 us    |            }
+   0)   0.679 us    |          }
+   0)   0.020 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.020 us    |                update_fast_ctr();
+   0)   0.186 us    |              }
+   0)   0.360 us    |            }
+   0)   0.539 us    |          }
+   0)   0.023 us    |          follow_managed();
+   0)   0.021 us    |          mntget();
+   0)   0.026 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.024 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.022 us    |                      _cond_resched();
+   0)   0.196 us    |                    }
+   0)   0.489 us    |                  }
+   0)   0.654 us    |                }
+   0)   0.992 us    |              }
+   0)   1.156 us    |            }
+   0)   1.350 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.022 us    |                mntget();
+   0)   0.193 us    |              }
+   0)   0.036 us    |              __mnt_want_write();
+   0)   0.024 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.021 us    |                    _cond_resched();
+   0)   0.194 us    |                  }
+   0)   0.022 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.031 us    |                    avc_has_perm();
+   0)   0.200 us    |                  }
+   0)   0.894 us    |                }
+   0)   0.027 us    |                __fsnotify_parent();
+   0)   0.024 us    |                fsnotify();
+   0)   1.500 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.025 us    |                dget_parent();
+   0)   0.025 us    |                dput();
+   0)   0.024 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.024 us    |                  generic_file_open();
+   0)   0.028 us    |                  __dquot_initialize();
+   0)   0.408 us    |                }
+   0)   1.202 us    |              }
+   0)   0.025 us    |              file_ra_state_init();
+   0)   4.195 us    |            }
+   0)   4.376 us    |          }
+   0)   0.022 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.022 us    |            process_measurement();
+   0)   0.196 us    |          }
+   0)   0.024 us    |          dput();
+   0)               |          mntput() {
+   0)   0.022 us    |            mntput_no_expire();
+   0)   0.202 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.020 us    |            drop_links.isra.19();
+   0)   0.023 us    |            dput();
+   0)               |            mntput() {
+   0)   0.021 us    |              mntput_no_expire();
+   0)   0.186 us    |            }
+   0)   0.720 us    |          }
+   0) + 18.595 us   |        }
+   0)   0.029 us    |        restore_nameidata();
+   0) + 18.974 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.026 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.024 us    |          _cond_resched();
+   0)   0.194 us    |        }
+   0)   0.382 us    |      }
+   0)               |      putname() {
+   0)   0.086 us    |        kmem_cache_free();
+   0)   0.269 us    |      }
+   0) + 22.256 us   |    }
+   0) + 22.466 us   |  }
+   0)               |  SyS_open() {
+   0)               |    do_sys_open() {
+   0)               |      getname() {
+   0)               |        getname_flags() {
+   0)               |          kmem_cache_alloc() {
+   0)   0.032 us    |            _cond_resched();
+   0)   0.303 us    |          }
+   0)   0.525 us    |        }
+   0)   0.710 us    |      }
+   0)               |      get_unused_fd_flags() {
+   0)               |        __alloc_fd() {
+   0)   0.022 us    |          _raw_spin_lock();
+   0)   0.033 us    |          expand_files();
+   0)   0.457 us    |        }
+   0)   0.634 us    |      }
+   0)               |      do_filp_open() {
+   0)               |        path_openat() {
+   0)               |          get_empty_filp() {
+   0)               |            kmem_cache_alloc() {
+   0)   0.023 us    |              _cond_resched();
+   0)   0.215 us    |            }
+   0)               |            security_file_alloc() {
+   0)               |              selinux_file_alloc_security() {
+   0)               |                kmem_cache_alloc() {
+   0)   0.021 us    |                  _cond_resched();
+   0)   0.214 us    |                }
+   0)   0.400 us    |              }
+   0)   0.582 us    |            }
+   0)   0.026 us    |            __mutex_init();
+   0)   1.367 us    |          }
+   0)               |          path_init() {
+   0)   0.081 us    |            set_root();
+   0)   0.023 us    |            nd_jump_root();
+   0)   0.457 us    |          }
+   0)               |          link_path_walk() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.022 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.063 us    |                    __inode_security_revalidate();
+   0)   0.320 us    |                  }
+   0)   0.547 us    |                }
+   0)   0.892 us    |              }
+   0)   1.082 us    |            }
+   0)               |            walk_component() {
+   0)               |              lookup_fast() {
+   0)   0.216 us    |                __d_lookup_rcu();
+   0)   0.068 us    |                __lookup_mnt();
+   0)   0.862 us    |              }
+   0)   1.034 us    |            }
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.027 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)   0.059 us    |                    __inode_security_revalidate();
+   0)   0.289 us    |                  }
+   0)   0.461 us    |                }
+   0)   0.866 us    |              }
+   0)   1.065 us    |            }
+   0)   3.721 us    |          }
+   0)               |          complete_walk() {
+   0)               |            unlazy_walk() {
+   0)               |              legitimize_mnt() {
+   0)   0.025 us    |                __legitimize_mnt();
+   0)   0.191 us    |              }
+   0)   0.374 us    |            }
+   0)   0.551 us    |          }
+   0)               |          mnt_want_write() {
+   0)               |            __sb_start_write() {
+   0)               |              percpu_down_read() {
+   0)   0.024 us    |                _cond_resched();
+   0)   0.023 us    |                update_fast_ctr();
+   0)   0.365 us    |              }
+   0)   0.534 us    |            }
+   0)   0.039 us    |            __mnt_want_write();
+   0)   0.897 us    |          }
+   0)               |          mutex_lock() {
+   0)   0.022 us    |            _cond_resched();
+   0)   0.191 us    |          }
+   0)               |          lookup_dcache() {
+   0)               |            d_lookup() {
+   0)               |              __d_lookup() {
+   0)   0.022 us    |                _raw_spin_lock();
+   0)   0.283 us    |              }
+   0)   0.454 us    |            }
+   0)   0.627 us    |          }
+   0)   0.021 us    |          mutex_unlock();
+   0)               |          mnt_drop_write() {
+   0)               |            __sb_end_write() {
+   0)               |              percpu_up_read() {
+   0)   0.024 us    |                update_fast_ctr();
+   0)   0.188 us    |              }
+   0)   0.370 us    |            }
+   0)   0.571 us    |          }
+   0)   0.023 us    |          follow_managed();
+   0)   0.024 us    |          mntget();
+   0)   0.025 us    |          complete_walk();
+   0)               |          may_open() {
+   0)               |            inode_permission() {
+   0)               |              __inode_permission() {
+   0)   0.026 us    |                generic_permission();
+   0)               |                security_inode_permission() {
+   0)               |                  selinux_inode_permission() {
+   0)               |                    __inode_security_revalidate() {
+   0)   0.023 us    |                      _cond_resched();
+   0)   0.205 us    |                    }
+   0)   0.477 us    |                  }
+   0)   0.641 us    |                }
+   0)   1.001 us    |              }
+   0)   1.168 us    |            }
+   0)   1.344 us    |          }
+   0)               |          vfs_open() {
+   0)               |            do_dentry_open() {
+   0)               |              path_get() {
+   0)   0.025 us    |                mntget();
+   0)   0.196 us    |              }
+   0)   0.035 us    |              __mnt_want_write();
+   0)   0.026 us    |              try_module_get();
+   0)               |              security_file_open() {
+   0)               |                selinux_file_open() {
+   0)               |                  __inode_security_revalidate() {
+   0)   0.021 us    |                    _cond_resched();
+   0)   0.197 us    |                  }
+   0)   0.020 us    |                  avc_policy_seqno();
+   0)               |                  inode_has_perm.isra.37() {
+   0)   0.042 us    |                    avc_has_perm();
+   0)   0.437 us    |                  }
+   0)   1.144 us    |                }
+   0)   0.023 us    |                __fsnotify_parent();
+   0)   0.025 us    |                fsnotify();
+   0)   1.730 us    |              }
+   0)               |              ext4_file_open [ext4]() {
+   0)   0.027 us    |                dget_parent();
+   0)   0.027 us    |                dput();
+   0)   0.023 us    |                ext4_inode_attach_jinode [ext4]();
+   0)               |                dquot_file_open() {
+   0)   0.022 us    |                  generic_file_open();
+   0)   0.027 us    |                  __dquot_initialize();
+   0)   0.409 us    |                }
+   0)   1.195 us    |              }
+   0)   0.023 us    |              file_ra_state_init();
+   0)   4.322 us    |            }
+   0)   4.504 us    |          }
+   0)   0.021 us    |          open_check_o_direct();
+   0)               |          ima_file_check() {
+   0)   0.022 us    |            process_measurement();
+   0)   0.190 us    |          }
+   0)   0.023 us    |          dput();
+   0)               |          mntput() {
+   0)   0.025 us    |            mntput_no_expire();
+   0)   0.211 us    |          }
+   0)               |          terminate_walk() {
+   0)   0.022 us    |            drop_links.isra.19();
+   0)   0.026 us    |            dput();
+   0)               |            mntput() {
+   0)   0.023 us    |              mntput_no_expire();
+   0)   0.191 us    |            }
+   0)   0.742 us    |          }
+   0) + 18.462 us   |        }
+   0)   0.026 us    |        restore_nameidata();
+   0) + 18.844 us   |      }
+   0)   0.023 us    |      __fsnotify_parent();
+   0)   0.023 us    |      fsnotify();
+   0)               |      fd_install() {
+   0)               |        __fd_install() {
+   0)   0.024 us    |          _cond_resched();
+   0)   0.197 us    |        }
+   0)   0.382 us    |      }
+   0)               |      putname() {
+   0)   0.083 us    |        kmem_cache_free();
+   0)   0.267 us    |      }
+   0) + 22.092 us   |    }
+   0) + 22.294 us   |  }
+
+Ending tracing...

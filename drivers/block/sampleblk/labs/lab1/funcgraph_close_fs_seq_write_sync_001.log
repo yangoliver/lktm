@@ -1,0 +1,509 @@
+# sudo ./funcgraph -d 1 -p 95069 SyS_close
+
+Tracing "SyS_close" for PID 95069 for 1 seconds...
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.037 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.036 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.024 us    |            kick_process();
+   0)   0.243 us    |          }
+   0)   0.488 us    |        }
+   0)   1.153 us    |      }
+   0)   1.910 us    |    }
+   0)   2.252 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.043 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.032 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.026 us    |            kick_process();
+   0)   0.309 us    |          }
+   0)   0.551 us    |        }
+   0)   1.285 us    |      }
+   0)   1.793 us    |    }
+   0)   2.091 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.042 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.029 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.032 us    |            kick_process();
+   0)   0.265 us    |          }
+   0)   0.485 us    |        }
+   0)   1.114 us    |      }
+   0)   1.611 us    |    }
+   0)   2.100 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.044 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.023 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.034 us    |            kick_process();
+   0)   0.257 us    |          }
+   0)   0.479 us    |        }
+   0)   1.129 us    |      }
+   0)   1.643 us    |    }
+   0)   1.845 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.026 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.032 us    |        dnotify_flush();
+   0)   0.026 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.026 us    |            kick_process();
+   0)   0.241 us    |          }
+   0)   0.460 us    |        }
+   0)   1.133 us    |      }
+   0)   1.674 us    |    }
+   0)   1.956 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.029 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.024 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.295 us    |          }
+   0)   0.972 us    |        }
+   0)   1.630 us    |      }
+   0)   2.150 us    |    }
+   0)   2.361 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.028 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.024 us    |        dnotify_flush();
+   0)   0.025 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.246 us    |          }
+   0)   0.455 us    |        }
+   0)   1.125 us    |      }
+   0)   1.614 us    |    }
+   0)   1.813 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.023 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.035 us    |        dnotify_flush();
+   0)   0.023 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.235 us    |          }
+   0)   0.452 us    |        }
+   0)   1.334 us    |      }
+   0)   1.809 us    |    }
+   0)   2.027 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.054 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.032 us    |        dnotify_flush();
+   0)   0.023 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.060 us    |            kick_process();
+   0)   0.277 us    |          }
+   0)   0.501 us    |        }
+   0)   1.385 us    |      }
+   0)   1.906 us    |    }
+   0)   2.136 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.035 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.026 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.026 us    |            kick_process();
+   0)   0.242 us    |          }
+   0)   0.454 us    |        }
+   0)   1.151 us    |      }
+   0)   1.638 us    |    }
+   0)   1.846 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.029 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.024 us    |        dnotify_flush();
+   0)   0.024 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.023 us    |            kick_process();
+   0)   0.352 us    |          }
+   0)   0.582 us    |        }
+   0)   1.309 us    |      }
+   0)   1.853 us    |    }
+   0)   2.081 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.028 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.033 us    |        dnotify_flush();
+   0)   0.028 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.314 us    |          }
+   0)   0.541 us    |        }
+   0)   1.999 us    |      }
+   0)   2.430 us    |    }
+   0)   2.628 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.026 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.034 us    |        dnotify_flush();
+   0)   0.026 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.251 us    |          }
+   0)   0.479 us    |        }
+   0)   1.247 us    |      }
+   0)   1.732 us    |    }
+   0)   1.966 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.029 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.023 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.322 us    |          }
+   0)   0.542 us    |        }
+   0)   1.234 us    |      }
+   0)   1.683 us    |    }
+   0)   1.933 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.043 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.033 us    |        dnotify_flush();
+   0)   0.025 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.213 us    |          }
+   0)   0.461 us    |        }
+   0)   1.108 us    |      }
+   0)   1.896 us    |    }
+   0)   2.264 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.035 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.021 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.200 us    |          }
+   0)   0.412 us    |        }
+   0)   1.228 us    |      }
+   0)   1.664 us    |    }
+   0)   1.870 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.038 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.024 us    |            kick_process();
+   0)   0.217 us    |          }
+   0)   0.422 us    |        }
+   0)   0.991 us    |      }
+   0)   1.423 us    |    }
+   0)   1.651 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.033 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.067 us    |        dnotify_flush();
+   0)   0.021 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.223 us    |          }
+   0)   0.605 us    |        }
+   0)   1.223 us    |      }
+   0)   1.635 us    |    }
+   0)   1.840 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.035 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.025 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.020 us    |            kick_process();
+   0)   0.222 us    |          }
+   0)   0.422 us    |        }
+   0)   0.974 us    |      }
+   0)   1.382 us    |    }
+   0)   1.744 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.037 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.027 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.212 us    |          }
+   0)   0.431 us    |        }
+   0)   1.015 us    |      }
+   0)   1.622 us    |    }
+   0)   1.840 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.038 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.266 us    |          }
+   0)   0.553 us    |        }
+   0)   1.101 us    |      }
+   0)   1.506 us    |    }
+   0)   1.696 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.027 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.025 us    |        dnotify_flush();
+   0)   0.021 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.310 us    |          }
+   0)   0.514 us    |        }
+   0)   1.143 us    |      }
+   0)   1.587 us    |    }
+   0)   1.793 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.042 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.024 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.025 us    |            kick_process();
+   0)   0.400 us    |          }
+   0)   0.600 us    |        }
+   0)   1.222 us    |      }
+   0)   1.651 us    |    }
+   0)   1.867 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.038 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.025 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.210 us    |          }
+   0)   0.419 us    |        }
+   0)   0.975 us    |      }
+   0)   1.389 us    |    }
+   0)   1.598 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.037 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.023 us    |        dnotify_flush();
+   0)   0.025 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.023 us    |            kick_process();
+   0)   0.239 us    |          }
+   0)   0.451 us    |        }
+   0)   1.066 us    |      }
+   0)   1.512 us    |    }
+   0)   1.712 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.037 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.027 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.206 us    |          }
+   0)   0.423 us    |        }
+   0)   1.006 us    |      }
+   0)   1.421 us    |    }
+   0)   1.616 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.035 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.020 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.025 us    |            kick_process();
+   0)   0.212 us    |          }
+   0)   0.457 us    |        }
+   0)   1.058 us    |      }
+   0)   1.463 us    |    }
+   0)   1.692 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.036 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.021 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.209 us    |          }
+   0)   0.441 us    |        }
+   0)   1.038 us    |      }
+   0)   1.445 us    |    }
+   0)   1.712 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.038 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.023 us    |        dnotify_flush();
+   0)   0.023 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.059 us    |            kick_process();
+   0)   0.243 us    |          }
+   0)   0.459 us    |        }
+   0)   1.196 us    |      }
+   0)   1.657 us    |    }
+   0)   1.878 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.381 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.035 us    |        dnotify_flush();
+   0)   0.024 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.060 us    |            kick_process();
+   0)   0.274 us    |          }
+   0)   0.516 us    |        }
+   0)   1.233 us    |      }
+   0)   2.425 us    |    }
+   0)   2.746 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.044 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.034 us    |        dnotify_flush();
+   0)   0.031 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.024 us    |            kick_process();
+   0)   0.300 us    |          }
+   0)   0.545 us    |        }
+   0)   1.332 us    |      }
+   0)   1.854 us    |    }
+   0)   2.113 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.026 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.023 us    |        dnotify_flush();
+   0)   0.023 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.022 us    |            kick_process();
+   0)   0.247 us    |          }
+   0)   0.472 us    |        }
+   0)   1.153 us    |      }
+   0)   1.744 us    |    }
+   0)   2.016 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.030 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.026 us    |        dnotify_flush();
+   0)   0.022 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.021 us    |            kick_process();
+   0)   0.234 us    |          }
+   0)   0.695 us    |        }
+   0)   1.403 us    |      }
+   0)   1.836 us    |    }
+   0)   2.112 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.026 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.022 us    |        dnotify_flush();
+   0)   0.024 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.024 us    |            kick_process();
+   0)   0.245 us    |          }
+   0)   0.485 us    |        }
+   0)   1.241 us    |      }
+   0)   1.686 us    |    }
+   0)   2.646 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.036 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.023 us    |        dnotify_flush();
+   0)   0.027 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.024 us    |            kick_process();
+   0)   0.244 us    |          }
+   0)   0.478 us    |        }
+   0)   1.121 us    |      }
+   0)   1.537 us    |    }
+   0)   1.846 us    |  }
+   0)               |  SyS_close() {
+   0)               |    __close_fd() {
+   0)   0.032 us    |      _raw_spin_lock();
+   0)               |      filp_close() {
+   0)   0.019 us    |        dnotify_flush();
+   0)   0.018 us    |        locks_remove_posix();
+   0)               |        fput() {
+   0)               |          task_work_add() {
+   0)   0.029 us    |            kick_process();
+   0)   0.240 us    |          }
+   0)   0.478 us    |        }
+   0)   1.209 us    |      }
+   0)   1.621 us    |    }
+   0)   1.926 us    |  }
+
+Ending tracing...
