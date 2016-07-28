@@ -1,3 +1,6 @@
+$ sudo perf record -a -g --call-graph dwarf -F 997 sleep 60
+$ sudo perf report
+
 # To display the perf.data header info, please use --header/--header-only options.
 #
 # Samples: 119K of event 'cpu-clock'
