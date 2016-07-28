@@ -1,0 +1,998 @@
+$ sudo perf probe -m sampleblk -F
+cleanup_module
+init_module
+sampleblk_exit
+sampleblk_init
+sampleblk_ioctl
+sampleblk_open
+sampleblk_release
+sampleblk_request
+
+$ sudo perf probe -m sampleblk -L sampleblk_request 
+<sampleblk_request@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:0>
+      0  static void sampleblk_request(struct request_queue *q)
+      1  {
+                struct request *rq = NULL;
+      3         int rv = 0;
+                uint64_t pos = 0;
+                ssize_t size = 0;
+                struct bio_vec bvec;
+                struct req_iterator iter;
+                void *kaddr = NULL;
+         
+     10         while ((rq = blk_fetch_request(q)) != NULL) {
+     11                 spin_unlock_irq(q->queue_lock);
+         
+     13                 if (rq->cmd_type != REQ_TYPE_FS) {
+     14                         rv = -EIO;
+                                goto skip;
+                        }
+         
+     18                 BUG_ON(sampleblk_dev != rq->rq_disk->private_data);
+         
+     20                 pos = blk_rq_pos(rq) * sampleblk_sect_size;
+                        size = blk_rq_bytes(rq);
+     22                 if ((pos + size > sampleblk_dev->size)) {
+     23                         pr_crit("sampleblk: Beyond-end write (%llu %zx)\n",
+                                        pos, size);
+     25                         rv = -EIO;
+                                goto skip;
+                        }
+         
+     29                 rq_for_each_segment(bvec, rq, iter) {
+     30                         kaddr = kmap(bvec.bv_page);
+         
+     32                         rv = sampleblk_handle_io(sampleblk_dev, pos,
+                                        bvec.bv_len, kaddr + bvec.bv_offset,
+                                        rq_data_dir(rq));
+                                if (rv < 0)
+                                        goto skip;
+         
+     38                         pos += bvec.bv_len;
+                                kunmap(bvec.bv_page);
+                        }
+         skip:
+         
+     43                 blk_end_request_all(rq, rv);
+         
+     45                 spin_lock_irq(q->queue_lock);
+                }
+     47  }
+
+$ sudo perf probe -m sampleblk -V sampleblk_request 
+Available variables at sampleblk_request
+        @<sampleblk_request+0>
+		                struct request_queue*   q
+$ sudo perf probe -m sampleblk -a sampleblk_request
+Added new event:
+  probe:sampleblk_request (on sampleblk_request in sampleblk)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe:sampleblk_request -aR sleep 1
+
+$ sudo perf record -e probe:sampleblk_request -aR sleep 1
+$ sudo perf script
+             fio 13846 [000] 23035.840529: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.840761: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.842299: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.842599: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.846200: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.847240: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.847454: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.848984: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.849211: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.850721: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.850953: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.852368: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.852565: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.853975: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.854172: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/1:0H 13788 [001] 23035.855904: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.856120: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/1:0H 13788 [001] 23035.858161: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.858209: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.858285: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.860495: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.860499: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/1:0H 13788 [001] 23035.862537: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/0:2H 13790 [000] 23035.862571: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/1:0H 13788 [001] 23035.862600: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.862657: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.862769: probe:sampleblk_request: (ffffffffa04a1030)
+    kworker/1:0H 13788 [001] 23035.864658: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13846 [000] 23035.864672: probe:sampleblk_request: (ffffffffa04a1030)
+             fio 13845 [001] 23035.864770: probe:sampleblk_request: (ffffffffa04a1030)
+
+	
+$ sudo perf record -e probe:sampleblk_request -agR sleep 60
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 83K of event 'probe:sampleblk_request'
+# Event count (approx.): 83933
+#
+# Children      Self  Command          Shared Object      Symbol                             
+# ........  ........  ...............  .................  ...................................
+#
+    73.77%     0.00%  fio              [unknown]          [.] 0x0100000004041a08             
+                        |
+                        ---0x100000004041a08
+
+    73.77%     0.00%  fio              libc-2.17.so       [.] posix_fadvise64                
+                        |
+                        ---posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] return_from_SYSCALL_64         
+                        |
+                        ---return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] do_syscall_64                  
+                        |
+                        ---do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] sys_fadvise64                  
+                        |
+                        ---sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] __filemap_fdatawrite_range     
+                        |
+                        ---__filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] do_writepages                  
+                        |
+                        ---do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [ext4]             [k] ext4_writepages                
+                        |
+                        ---ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] blk_flush_plug_list            
+                        |
+                        ---blk_flush_plug_list
+                           |          
+                           |--74.45%-- blk_finish_plug
+                           |          ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                           |          
+                            --25.55%-- blk_queue_bio
+                                      generic_make_request
+                                      submit_bio
+                                      ext4_io_submit
+                                      |          
+                                      |--99.95%-- ext4_writepages
+                                      |          do_writepages
+                                      |          __filemap_fdatawrite_range
+                                      |          sys_fadvise64
+                                      |          do_syscall_64
+                                      |          return_from_SYSCALL_64
+                                      |          posix_fadvise64
+                                      |          0x100000004041a08
+                                       --0.05%-- [...]
+
+    73.77%     0.00%  fio              [kernel.kallsyms]  [k] queue_unplugged                
+                        |
+                        ---queue_unplugged
+                           blk_flush_plug_list
+                           |          
+                           |--74.45%-- blk_finish_plug
+                           |          ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                           |          
+                            --25.55%-- blk_queue_bio
+                                      generic_make_request
+                                      submit_bio
+                                      ext4_io_submit
+                                      |          
+                                      |--99.95%-- ext4_writepages
+                                      |          do_writepages
+                                      |          __filemap_fdatawrite_range
+                                      |          sys_fadvise64
+                                      |          do_syscall_64
+                                      |          return_from_SYSCALL_64
+                                      |          posix_fadvise64
+                                      |          0x100000004041a08
+                                       --0.05%-- [...]
+
+    73.77%    73.77%  fio              [sampleblk]        [k] sampleblk_request              
+                        |
+                        ---sampleblk_request
+                           queue_unplugged
+                           blk_flush_plug_list
+                           |          
+                           |--74.45%-- blk_finish_plug
+                           |          ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                           |          
+                            --25.55%-- blk_queue_bio
+                                      generic_make_request
+                                      submit_bio
+                                      ext4_io_submit
+                                      |          
+                                      |--99.95%-- ext4_writepages
+                                      |          do_writepages
+                                      |          __filemap_fdatawrite_range
+                                      |          sys_fadvise64
+                                      |          do_syscall_64
+                                      |          return_from_SYSCALL_64
+                                      |          posix_fadvise64
+                                      |          0x100000004041a08
+                                       --0.05%-- [...]
+
+    54.92%     0.00%  fio              [kernel.kallsyms]  [k] blk_finish_plug                
+                        |
+                        ---blk_finish_plug
+                           ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+    18.85%     0.00%  fio              [ext4]             [k] ext4_io_submit                 
+                        |
+                        ---ext4_io_submit
+                           |          
+                           |--99.95%-- ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                            --0.05%-- [...]
+
+    18.85%     0.00%  fio              [kernel.kallsyms]  [k] submit_bio                     
+                        |
+                        ---submit_bio
+                           ext4_io_submit
+                           |          
+                           |--99.95%-- ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                            --0.05%-- [...]
+
+    18.85%     0.00%  fio              [kernel.kallsyms]  [k] generic_make_request           
+                        |
+                        ---generic_make_request
+                           submit_bio
+                           ext4_io_submit
+                           |          
+                           |--99.95%-- ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                            --0.05%-- [...]
+
+    18.85%     0.00%  fio              [kernel.kallsyms]  [k] blk_queue_bio                  
+                        |
+                        ---blk_queue_bio
+                           generic_make_request
+                           submit_bio
+                           ext4_io_submit
+                           |          
+                           |--99.95%-- ext4_writepages
+                           |          do_writepages
+                           |          __filemap_fdatawrite_range
+                           |          sys_fadvise64
+                           |          do_syscall_64
+                           |          return_from_SYSCALL_64
+                           |          posix_fadvise64
+                           |          0x100000004041a08
+                            --0.05%-- [...]
+
+    13.15%     0.00%  kworker/0:2H     [kernel.kallsyms]  [k] ret_from_fork                  
+               |
+               ---ret_from_fork
+
+    13.15%     0.00%  kworker/0:2H     [kernel.kallsyms]  [k] kthread                        
+               |
+               ---kthread
+                  ret_from_fork
+
+    13.15%     0.00%  kworker/0:2H     [kernel.kallsyms]  [k] worker_thread                  
+               |
+               ---worker_thread
+                  kthread
+                  ret_from_fork
+
+    13.15%     0.00%  kworker/0:2H     [kernel.kallsyms]  [k] process_one_work               
+               |
+               ---process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+    13.15%     0.00%  kworker/0:2H     [kernel.kallsyms]  [k] blk_delay_work                 
+               |
+               ---blk_delay_work
+                  process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+    13.15%    13.15%  kworker/0:2H     [sampleblk]        [k] sampleblk_request              
+               |
+               ---sampleblk_request
+                  blk_delay_work
+                  process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+     9.60%     0.00%  kthreadd         [kernel.kallsyms]  [k] ret_from_fork                  
+                   |
+                   ---ret_from_fork
+
+     9.60%     0.00%  kthreadd         [kernel.kallsyms]  [k] kthread                        
+                   |
+                   ---kthread
+                      ret_from_fork
+
+     9.60%     0.00%  kthreadd         [kernel.kallsyms]  [k] worker_thread                  
+                   |
+                   ---worker_thread
+                      kthread
+                      ret_from_fork
+
+     9.60%     0.00%  kthreadd         [kernel.kallsyms]  [k] process_one_work               
+                   |
+                   ---process_one_work
+                      worker_thread
+                      kthread
+                      ret_from_fork
+
+     9.60%     0.00%  kthreadd         [kernel.kallsyms]  [k] blk_delay_work                 
+                   |
+                   ---blk_delay_work
+                      process_one_work
+                      worker_thread
+                      kthread
+                      ret_from_fork
+
+     9.60%     9.60%  kthreadd         [sampleblk]        [k] sampleblk_request              
+                   |
+                   ---sampleblk_request
+                      blk_delay_work
+                      process_one_work
+                      worker_thread
+                      kthread
+                      ret_from_fork
+
+     3.44%     0.00%  kworker/1:0H     [kernel.kallsyms]  [k] ret_from_fork                  
+               |
+               ---ret_from_fork
+
+     3.44%     0.00%  kworker/1:0H     [kernel.kallsyms]  [k] kthread                        
+               |
+               ---kthread
+                  ret_from_fork
+
+     3.44%     0.00%  kworker/1:0H     [kernel.kallsyms]  [k] worker_thread                  
+               |
+               ---worker_thread
+                  kthread
+                  ret_from_fork
+
+     3.44%     0.00%  kworker/1:0H     [kernel.kallsyms]  [k] process_one_work               
+               |
+               ---process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+     3.44%     0.00%  kworker/1:0H     [kernel.kallsyms]  [k] blk_delay_work                 
+               |
+               ---blk_delay_work
+                  process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+     3.44%     3.44%  kworker/1:0H     [sampleblk]        [k] sampleblk_request              
+               |
+               ---sampleblk_request
+                  blk_delay_work
+                  process_one_work
+                  worker_thread
+                  kthread
+                  ret_from_fork
+
+     0.03%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] ret_from_fork                  
+            |
+            ---ret_from_fork
+
+     0.03%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] kthread                        
+            |
+            ---kthread
+               ret_from_fork
+
+     0.03%     0.00%  jbd2/sampleblk1  [jbd2]             [k] kjournald2                     
+            |
+            ---kjournald2
+               kthread
+               ret_from_fork
+
+     0.03%     0.00%  jbd2/sampleblk1  [jbd2]             [k] jbd2_journal_commit_transaction
+            |
+            ---jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.03%     0.03%  jbd2/sampleblk1  [sampleblk]        [k] sampleblk_request              
+            |
+            ---sampleblk_request
+               |          
+               |--58.62%-- queue_unplugged
+               |          blk_flush_plug_list
+               |          |          
+               |          |--94.12%-- blk_finish_plug
+               |          |          |          
+               |          |          |--68.75%-- jbd2_journal_commit_transaction
+               |          |          |          kjournald2
+               |          |          |          kthread
+               |          |          |          ret_from_fork
+               |          |          |          
+               |          |           --31.25%-- generic_writepages
+               |          |                     journal_submit_data_buffers
+               |          |                     jbd2_journal_commit_transaction
+               |          |                     kjournald2
+               |          |                     kthread
+               |          |                     ret_from_fork
+               |          |          
+               |           --5.88%-- blk_queue_bio
+               |                     generic_make_request
+               |                     submit_bio
+               |                     ext4_io_submit
+               |                     ext4_writepage
+               |                     __writepage
+               |                     write_cache_pages
+               |                     generic_writepages
+               |                     journal_submit_data_buffers
+               |                     jbd2_journal_commit_transaction
+               |                     kjournald2
+               |                     kthread
+               |                     ret_from_fork
+               |          
+                --41.38%-- blk_queue_bio
+                          generic_make_request
+                          submit_bio
+                          submit_bh_wbc
+                          submit_bh
+                          journal_submit_commit_record
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] blk_flush_plug_list            
+            |
+            ---blk_flush_plug_list
+               |          
+               |--94.12%-- blk_finish_plug
+               |          |          
+               |          |--68.75%-- jbd2_journal_commit_transaction
+               |          |          kjournald2
+               |          |          kthread
+               |          |          ret_from_fork
+               |          |          
+               |           --31.25%-- generic_writepages
+               |                     journal_submit_data_buffers
+               |                     jbd2_journal_commit_transaction
+               |                     kjournald2
+               |                     kthread
+               |                     ret_from_fork
+               |          
+                --5.88%-- blk_queue_bio
+                          generic_make_request
+                          submit_bio
+                          ext4_io_submit
+                          ext4_writepage
+                          __writepage
+                          write_cache_pages
+                          generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] queue_unplugged                
+            |
+            ---queue_unplugged
+               blk_flush_plug_list
+               |          
+               |--94.12%-- blk_finish_plug
+               |          |          
+               |          |--68.75%-- jbd2_journal_commit_transaction
+               |          |          kjournald2
+               |          |          kthread
+               |          |          ret_from_fork
+               |          |          
+               |           --31.25%-- generic_writepages
+               |                     journal_submit_data_buffers
+               |                     jbd2_journal_commit_transaction
+               |                     kjournald2
+               |                     kthread
+               |                     ret_from_fork
+               |          
+                --5.88%-- blk_queue_bio
+                          generic_make_request
+                          submit_bio
+                          ext4_io_submit
+                          ext4_writepage
+                          __writepage
+                          write_cache_pages
+                          generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] blk_finish_plug                
+            |
+            ---blk_finish_plug
+               |          
+               |--68.75%-- jbd2_journal_commit_transaction
+               |          kjournald2
+               |          kthread
+               |          ret_from_fork
+               |          
+                --31.25%-- generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] submit_bio                     
+            |
+            ---submit_bio
+               |          
+               |--92.31%-- submit_bh_wbc
+               |          submit_bh
+               |          journal_submit_commit_record
+               |          jbd2_journal_commit_transaction
+               |          kjournald2
+               |          kthread
+               |          ret_from_fork
+               |          
+                --7.69%-- ext4_io_submit
+                          ext4_writepage
+                          __writepage
+                          write_cache_pages
+                          generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] generic_make_request           
+            |
+            ---generic_make_request
+               submit_bio
+               |          
+               |--92.31%-- submit_bh_wbc
+               |          submit_bh
+               |          journal_submit_commit_record
+               |          jbd2_journal_commit_transaction
+               |          kjournald2
+               |          kthread
+               |          ret_from_fork
+               |          
+                --7.69%-- ext4_io_submit
+                          ext4_writepage
+                          __writepage
+                          write_cache_pages
+                          generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.02%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] blk_queue_bio                  
+            |
+            ---blk_queue_bio
+               generic_make_request
+               submit_bio
+               |          
+               |--92.31%-- submit_bh_wbc
+               |          submit_bh
+               |          journal_submit_commit_record
+               |          jbd2_journal_commit_transaction
+               |          kjournald2
+               |          kthread
+               |          ret_from_fork
+               |          
+                --7.69%-- ext4_io_submit
+                          ext4_writepage
+                          __writepage
+                          write_cache_pages
+                          generic_writepages
+                          journal_submit_data_buffers
+                          jbd2_journal_commit_transaction
+                          kjournald2
+                          kthread
+                          ret_from_fork
+
+     0.01%     0.00%  jbd2/sampleblk1  [jbd2]             [k] journal_submit_commit_record   
+            |
+            ---journal_submit_commit_record
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.01%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] submit_bh                      
+            |
+            ---submit_bh
+               journal_submit_commit_record
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.01%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] submit_bh_wbc                  
+            |
+            ---submit_bh_wbc
+               submit_bh
+               journal_submit_commit_record
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.01%     0.00%  fio              [ext4]             [k] mpage_prepare_extent_to_map    
+                        |
+                        ---mpage_prepare_extent_to_map
+                           ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+     0.01%     0.00%  fio              [ext4]             [k] mpage_process_page_bufs        
+                        |
+                        ---mpage_process_page_bufs
+                           mpage_prepare_extent_to_map
+                           ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+     0.01%     0.00%  fio              [ext4]             [k] mpage_submit_page              
+                        |
+                        ---mpage_submit_page
+                           mpage_process_page_bufs
+                           mpage_prepare_extent_to_map
+                           ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+     0.01%     0.00%  fio              [ext4]             [k] ext4_bio_write_page            
+                        |
+                        ---ext4_bio_write_page
+                           mpage_submit_page
+                           mpage_process_page_bufs
+                           mpage_prepare_extent_to_map
+                           ext4_writepages
+                           do_writepages
+                           __filemap_fdatawrite_range
+                           sys_fadvise64
+                           do_syscall_64
+                           return_from_SYSCALL_64
+                           posix_fadvise64
+                           0x100000004041a08
+
+     0.01%     0.00%  jbd2/sampleblk1  [jbd2]             [k] journal_submit_data_buffers    
+            |
+            ---journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.01%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] generic_writepages             
+            |
+            ---generic_writepages
+               journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] ret_from_fork                  
+             |
+             ---ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] kthread                        
+             |
+             ---kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] worker_thread                  
+             |
+             ---worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] process_one_work               
+             |
+             ---process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] wb_workfn                      
+             |
+             ---wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] wb_writeback                   
+             |
+             ---wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] blk_finish_plug                
+             |
+             ---blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] blk_flush_plug_list            
+             |
+             ---blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [kernel.kallsyms]  [k] queue_unplugged                
+             |
+             ---queue_unplugged
+                blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:1   [sampleblk]        [k] sampleblk_request              
+             |
+             ---sampleblk_request
+                queue_unplugged
+                blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [sampleblk]        [k] sampleblk_request              
+             |
+             ---sampleblk_request
+                queue_unplugged
+                blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] write_cache_pages              
+            |
+            ---write_cache_pages
+               generic_writepages
+               journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.00%     0.00%  jbd2/sampleblk1  [kernel.kallsyms]  [k] __writepage                    
+            |
+            ---__writepage
+               write_cache_pages
+               generic_writepages
+               journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.00%     0.00%  jbd2/sampleblk1  [ext4]             [k] ext4_writepage                 
+            |
+            ---ext4_writepage
+               __writepage
+               write_cache_pages
+               generic_writepages
+               journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.00%     0.00%  jbd2/sampleblk1  [ext4]             [k] ext4_io_submit                 
+            |
+            ---ext4_io_submit
+               ext4_writepage
+               __writepage
+               write_cache_pages
+               generic_writepages
+               journal_submit_data_buffers
+               jbd2_journal_commit_transaction
+               kjournald2
+               kthread
+               ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] ret_from_fork                  
+             |
+             ---ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] kthread                        
+             |
+             ---kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] worker_thread                  
+             |
+             ---worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] process_one_work               
+             |
+             ---process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] wb_workfn                      
+             |
+             ---wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] wb_writeback                   
+             |
+             ---wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] blk_finish_plug                
+             |
+             ---blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] blk_flush_plug_list            
+             |
+             ---blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+     0.00%     0.00%  kworker/u256:2   [kernel.kallsyms]  [k] queue_unplugged                
+             |
+             ---queue_unplugged
+                blk_flush_plug_list
+                blk_finish_plug
+                wb_writeback
+                wb_workfn
+                process_one_work
+                worker_thread
+                kthread
+                ret_from_fork
+
+
+
+#
+# (For a higher level overview, try: perf report --sort comm,dso)
+#
