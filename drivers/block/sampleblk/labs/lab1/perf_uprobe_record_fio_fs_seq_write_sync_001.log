@@ -1,0 +1,194 @@
+$ sudo perf probe -x /usr/local/bin/fio -F | grep fadvise
+posix_fadvise64@plt
+
+$ sudo perf probe -x /lib64/libc.so.6 -F | grep fadvise64
+posix_fadvise64
+
+$ sudo perf probe -x /lib64/libc.so.6 -L posix_fadvise64
+<posix_fadvise@/usr/src/debug/glibc-2.17-c758a686/io/../sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c:0>
+      0  posix_fadvise (int fd, off_t offset, off_t len, int advise)
+      1  {
+         #ifdef __NR_fadvise64
+           INTERNAL_SYSCALL_DECL (err);
+      4    int ret = INTERNAL_SYSCALL (fadvise64, err, 4, fd, offset, len, advise);
+           if (INTERNAL_SYSCALL_ERROR_P (ret, err))
+      6      return INTERNAL_SYSCALL_ERRNO (ret, err);
+           return 0;
+         #else
+           return ENOSYS;
+         #endif
+     11  }
+         strong_alias (posix_fadvise, posix_fadvise64)
+
+$ sudo perf probe -x /lib64/libc.so.6 -V posix_fadvise64
+Available variables at posix_fadvise64
+        @<posix_fadvise+0>
+                int     advise
+                int     fd
+                long int        __arg1
+                long int        __arg2
+                long int        __arg3
+                long int        __arg4
+                long int        _a1
+                long int        _a2
+                long int        _a3
+                long int        _a4
+                off_t   len
+                off_t   offset
+
+$ sudo perf probe -x /lib64/libc.so.6 -a 'posix_fadvise64 advise'
+Added new event:
+  probe_libc:posix_fadvise64 (on posix_fadvise64 in /usr/lib64/libc-2.17.so with advise)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_libc:posix_fadvise64 -aR sleep 1
+
+$ sudo perf record -e probe_libc:posix_fadvise64 -aR -g --call-graph dwarf sleep 60
+
+$ sudo perf report | more
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 76K of event 'probe_libc:posix_fadvise64'
+# Event count (approx.): 76355
+#
+# Children      Self  Command  Shared Object  Symbol                   
+# ........  ........  .......  .............  .........................
+#
+   100.00%     0.00%  fio      fio            [.] run_threads          
+                |
+                ---run_threads
+
+   100.00%     0.00%  fio      fio            [.] thread_main          
+                |
+                ---thread_main
+                   run_threads
+
+   100.00%     0.00%  fio      fio            [.] get_io_u             
+                |
+                ---get_io_u
+                   thread_main
+                   run_threads
+
+   100.00%     0.00%  fio      fio            [.] td_io_open_file      
+                |
+                ---td_io_open_file
+                   get_io_u
+                   thread_main
+                   run_threads
+
+   100.00%   100.00%  fio      libc-2.17.so   [.] posix_fadvise64      
+                |
+                ---posix_fadvise64
+                   |          
+                   |--50.00%-- file_invalidate_cache
+                   |          td_io_open_file
+                   |          get_io_u
+                   |          thread_main
+                   |          run_threads
+                   |          
+                    --50.00%-- td_io_open_file
+                              get_io_u
+                              thread_main
+                              run_threads
+
+    50.00%     0.00%  fio      fio            [.] file_invalidate_cache
+                |
+                ---file_invalidate_cache
+                   td_io_open_file
+                   get_io_u
+                   thread_main
+                   run_threads
+
+
+
+#
+# (For a higher level overview, try: perf report --sort comm,dso)
+#
+
+
+$ sudo perf script
+fio 15999 [001] 52483.731975: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=2
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  41a957 td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 16000 [000] 52483.732983: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=4
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  4303b3 file_invalidate_cache (/usr/local/bin/fio)
+                  41a79b td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 15999 [001] 52483.733253: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=4
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  4303b3 file_invalidate_cache (/usr/local/bin/fio)
+                  41a79b td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 15999 [001] 52483.734561: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=2
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  41a957 td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 15999 [001] 52483.735954: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=4
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  4303b3 file_invalidate_cache (/usr/local/bin/fio)
+                  41a79b td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 15999 [001] 52483.737154: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=2
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  41a957 td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+fio 15999 [001] 52483.738586: probe_libc:posix_fadvise64: (7fa20dd0ed40) advise=4
+            7fa20dd0ed40 posix_fadvise64 (/usr/lib64/libc-2.17.so)
+                  4303b3 file_invalidate_cache (/usr/local/bin/fio)
+                  41a79b td_io_open_file (/usr/local/bin/fio)
+                  43f40d get_io_u (/usr/local/bin/fio)
+                  45ad89 thread_main (/usr/local/bin/fio)
+                  45cffc run_threads (/usr/local/bin/fio)
+
+
+$ sudo strace -ttt -T -C -e fadvise64 -p 16000
+Process 16000 attached
+1469744051.353277 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000113>
+1469744051.359044 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.000386>
+1469744051.359515 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000060>
+1469744051.365121 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.001203>
+1469744051.366431 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000067>
+1469744051.378897 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.007415>
+1469744051.386445 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000100>
+1469744051.394581 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.006681>
+1469744051.401386 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000073>
+1469744051.411018 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.000352>
+1469744051.411480 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000066>
+1469744051.424215 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.001444>
+1469744051.425784 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000087>
+1469744051.435160 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.000947>
+1469744051.436239 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000067>
+1469744051.441937 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.001322>
+1469744051.443390 fadvise64(3, 0, 2097152, POSIX_FADV_SEQUENTIAL) = 0 <0.000192>
+1469744051.450277 fadvise64(3, 0, 2097152, POSIX_FADV_DONTNEED) = 0 <0.001633>
+
+...[snipped]...
+
+^CProcess 16000 detached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.023226         244        95           fadvise64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.023226                    95           total
+
