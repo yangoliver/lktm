@@ -1,0 +1,17 @@
+$ sudo stap -L 'module("sampleblk").function("*")'
+module("sampleblk").function("bio_advance_iter@include/linux/bio.h:223")
+module("sampleblk").function("bvec_iter_advance@include/linux/bio.h:196") $bytes:unsigned int
+module("sampleblk").function("kmalloc@include/linux/slab.h:466")
+module("sampleblk").function("kmap@include/linux/highmem.h:56")
+module("sampleblk").function("kzalloc@include/linux/slab.h:620")
+module("sampleblk").function("lowmem_page_address@include/linux/mm.h:949")
+module("sampleblk").function("sampleblk_alloc@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:131")
+module("sampleblk").function("sampleblk_exit@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:211")
+module("sampleblk").function("sampleblk_free@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:186")
+module("sampleblk").function("sampleblk_handle_io@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:49")
+module("sampleblk").function("sampleblk_init@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:195")
+module("sampleblk").function("sampleblk_ioctl@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:109") $bdev:struct block_device* $mode:fmode_t $command:unsigned int $argument:long unsigned int
+module("sampleblk").function("sampleblk_open@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:115") $bdev:struct block_device* $mode:fmode_t
+module("sampleblk").function("sampleblk_release@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:120") $disk:struct gendisk* $mode:fmode_t
+module("sampleblk").function("sampleblk_request@/home/yango/ws/lktm/drivers/block/sampleblk/day1/sample_blk.c:60") $q:struct request_queue*
+module("sampleblk").function("set_capacity@include/linux/genhd.h:464")
