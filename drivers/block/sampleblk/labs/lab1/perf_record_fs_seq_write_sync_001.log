@@ -1,5 +1,9 @@
-$ sudo perf record -a -g --call-graph dwarf -F 997 sleep 60
-$ sudo perf report
+# perf record -a -g --call-graph dwarf -F 997 sleep 60
+# perf report --stdio
+#
+# For flamegraph
+# perf script | stackcollapse-perf.pl > out.perf-folded
+# cat out.perf-folded | flamegraph.pl > flamegraph_on_cpu_perf_fs_seq_write_sync_001.svg
 
 # To display the perf.data header info, please use --header/--header-only options.
 #
