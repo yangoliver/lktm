@@ -1,0 +1,973 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 24K of event 'block:block_rq_complete'
+# Event count (approx.): 24437
+#
+# Children      Self  Command  Shared Object       Symbol                         
+# ........  ........  .......  ..................  ...............................
+#
+   100.00%     0.00%  fio      [unknown]           [.] 0000000000000000           
+                |
+                ---0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] return_from_SYSCALL_64     
+                |
+                ---return_from_SYSCALL_64
+                   |          
+                   |--100.00%-- posix_fadvise64
+                   |          0
+                    --0.00%-- [...]
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] do_syscall_64              
+                |
+                ---do_syscall_64
+                   return_from_SYSCALL_64
+                   |          
+                   |--100.00%-- posix_fadvise64
+                   |          0
+                    --0.00%-- [...]
+
+   100.00%   100.00%  fio      [kernel.vmlinux]    [k] blk_update_request         
+                |
+                ---blk_update_request
+                   |          
+                   |--99.99%-- blk_update_bidi_request
+                   |          blk_end_bidi_request
+                   |          blk_end_request_all
+                   |          sampleblk_request
+                   |          __blk_run_queue
+                   |          queue_unplugged
+                   |          blk_flush_plug_list
+                   |          |          
+                   |          |--76.92%-- blk_queue_bio
+                   |          |          generic_make_request
+                   |          |          submit_bio
+                   |          |          ext4_io_submit
+                   |          |          ext4_writepages
+                   |          |          do_writepages
+                   |          |          __filemap_fdatawrite_range
+                   |          |          sys_fadvise64
+                   |          |          do_syscall_64
+                   |          |          return_from_SYSCALL_64
+                   |          |          posix_fadvise64
+                   |          |          0
+                   |          |          
+                   |           --23.08%-- blk_finish_plug
+                   |                     ext4_writepages
+                   |                     do_writepages
+                   |                     __filemap_fdatawrite_range
+                   |                     sys_fadvise64
+                   |                     do_syscall_64
+                   |                     return_from_SYSCALL_64
+                   |                     posix_fadvise64
+                   |                     0
+                    --0.01%-- [...]
+
+   100.00%     0.00%  fio      libc-2.17.so        [.] posix_fadvise64            
+                |
+                ---posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] sys_fadvise64              
+                |
+                ---sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] __filemap_fdatawrite_range 
+                |
+                ---__filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] do_writepages              
+                |
+                ---do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [ext4]              [k] ext4_writepages            
+                |
+                ---ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] blk_flush_plug_list        
+                |
+                ---blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] queue_unplugged            
+                |
+                ---queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]    [k] __blk_run_queue            
+                |
+                ---__blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    99.99%     0.00%  fio      [sampleblk]         [k] sampleblk_request          
+                |
+                ---sampleblk_request
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    99.99%     0.00%  fio      [kernel.vmlinux]    [k] blk_end_request_all        
+                |
+                ---blk_end_request_all
+                   sampleblk_request
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    99.99%     0.00%  fio      [kernel.vmlinux]    [k] blk_end_bidi_request       
+                |
+                ---blk_end_bidi_request
+                   blk_end_request_all
+                   sampleblk_request
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    99.99%     0.00%  fio      [kernel.vmlinux]    [k] blk_update_bidi_request    
+                |
+                ---blk_update_bidi_request
+                   blk_end_bidi_request
+                   blk_end_request_all
+                   sampleblk_request
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   |          
+                   |--76.92%-- blk_queue_bio
+                   |          generic_make_request
+                   |          submit_bio
+                   |          ext4_io_submit
+                   |          ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --23.08%-- blk_finish_plug
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    76.92%     0.00%  fio      [ext4]              [k] ext4_io_submit             
+                |
+                ---ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    76.92%     0.00%  fio      [kernel.vmlinux]    [k] submit_bio                 
+                |
+                ---submit_bio
+                   ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    76.92%     0.00%  fio      [kernel.vmlinux]    [k] generic_make_request       
+                |
+                ---generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    76.92%     0.00%  fio      [kernel.vmlinux]    [k] blk_queue_bio              
+                |
+                ---blk_queue_bio
+                   generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    23.08%     0.00%  fio      [kernel.vmlinux]    [k] blk_finish_plug            
+                |
+                ---blk_finish_plug
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] irq_exit                   
+                |
+                ---irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] __do_softirq               
+                |
+                ---__do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] blk_done_softirq           
+                |
+                ---blk_done_softirq
+                   __do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] scsi_softirq_done          
+                |
+                ---scsi_softirq_done
+                   blk_done_softirq
+                   __do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] scsi_finish_command        
+                |
+                ---scsi_finish_command
+                   scsi_softirq_done
+                   blk_done_softirq
+                   __do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] scsi_io_completion         
+                |
+                ---scsi_io_completion
+                   scsi_finish_command
+                   scsi_softirq_done
+                   blk_done_softirq
+                   __do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.01%     0.00%  fio      [kernel.vmlinux]    [k] scsi_end_request           
+                |
+                ---scsi_end_request
+                   scsi_io_completion
+                   scsi_finish_command
+                   scsi_softirq_done
+                   blk_done_softirq
+                   __do_softirq
+                   irq_exit
+                   |          
+                   |--50.00%-- smp_apic_timer_interrupt
+                   |          apic_timer_interrupt
+                   |          __alloc_pages_nodemask
+                   |          alloc_pages_current
+                   |          __page_cache_alloc
+                   |          pagecache_get_page
+                   |          grab_cache_page_write_begin
+                   |          ext4_write_begin
+                   |          ext4_da_write_begin
+                   |          generic_perform_write
+                   |          __generic_file_write_iter
+                   |          ext4_file_write_iter
+                   |          __vfs_write
+                   |          vfs_write
+                   |          sys_write
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          0xe1cd
+                   |          0
+                   |          
+                    --50.00%-- do_IRQ
+                              ret_from_intr
+                              __blk_run_queue
+                              queue_unplugged
+                              blk_flush_plug_list
+                              blk_queue_bio
+                              generic_make_request
+                              submit_bio
+                              ext4_io_submit
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+     0.00%     0.00%  fio      libpthread-2.17.so  [.] 0xffff80f3b8d181cd         
+                |
+                ---0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] sys_write                  
+                |
+                ---sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] vfs_write                  
+                |
+                ---vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] __vfs_write                
+                |
+                ---__vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [ext4]              [k] ext4_file_write_iter       
+                |
+                ---ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] __generic_file_write_iter  
+                |
+                ---__generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] generic_perform_write      
+                |
+                ---generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [ext4]              [k] ext4_da_write_begin        
+                |
+                ---ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [ext4]              [k] ext4_write_begin           
+                |
+                ---ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] grab_cache_page_write_begin
+                |
+                ---grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] pagecache_get_page         
+                |
+                ---pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] __page_cache_alloc         
+                |
+                ---__page_cache_alloc
+                   pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] alloc_pages_current        
+                |
+                ---alloc_pages_current
+                   __page_cache_alloc
+                   pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] ret_from_intr              
+                |
+                ---ret_from_intr
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   blk_queue_bio
+                   generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] __alloc_pages_nodemask     
+                |
+                ---__alloc_pages_nodemask
+                   alloc_pages_current
+                   __page_cache_alloc
+                   pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] do_IRQ                     
+                |
+                ---do_IRQ
+                   ret_from_intr
+                   __blk_run_queue
+                   queue_unplugged
+                   blk_flush_plug_list
+                   blk_queue_bio
+                   generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] apic_timer_interrupt       
+                |
+                ---apic_timer_interrupt
+                   __alloc_pages_nodemask
+                   alloc_pages_current
+                   __page_cache_alloc
+                   pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+     0.00%     0.00%  fio      [kernel.vmlinux]    [k] smp_apic_timer_interrupt   
+                |
+                ---smp_apic_timer_interrupt
+                   apic_timer_interrupt
+                   __alloc_pages_nodemask
+                   alloc_pages_current
+                   __page_cache_alloc
+                   pagecache_get_page
+                   grab_cache_page_write_begin
+                   ext4_write_begin
+                   ext4_da_write_begin
+                   generic_perform_write
+                   __generic_file_write_iter
+                   ext4_file_write_iter
+                   __vfs_write
+                   vfs_write
+                   sys_write
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   0xe1cd
+                   0
+
+
+
+#
+# (For a higher level overview, try: perf report --sort comm,dso)
+#

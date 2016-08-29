@@ -1,0 +1,267 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 23K of event 'block:block_split'
+# Event count (approx.): 23111
+#
+# Children      Self  Command  Shared Object     Symbol                         
+# ........  ........  .......  ................  ...............................
+#
+   100.00%     0.00%  fio      [unknown]         [.] 0000000000000000           
+                |
+                ---0
+
+   100.00%     0.00%  fio      libc-2.17.so      [.] posix_fadvise64            
+                |
+                ---posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] return_from_SYSCALL_64     
+                |
+                ---return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] do_syscall_64              
+                |
+                ---do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] sys_fadvise64              
+                |
+                ---sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] __filemap_fdatawrite_range 
+                |
+                ---__filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] do_writepages              
+                |
+                ---do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [ext4]            [k] ext4_writepages            
+                |
+                ---ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+   100.00%     0.00%  fio      [ext4]            [k] ext4_io_submit             
+                |
+                ---ext4_io_submit
+                   |          
+                   |--55.73%-- ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --44.27%-- ext4_bio_write_page
+                              mpage_submit_page
+                              mpage_process_page_bufs
+                              mpage_prepare_extent_to_map
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] submit_bio                 
+                |
+                ---submit_bio
+                   ext4_io_submit
+                   |          
+                   |--55.73%-- ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --44.27%-- ext4_bio_write_page
+                              mpage_submit_page
+                              mpage_process_page_bufs
+                              mpage_prepare_extent_to_map
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] generic_make_request       
+                |
+                ---generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   |          
+                   |--55.73%-- ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --44.27%-- ext4_bio_write_page
+                              mpage_submit_page
+                              mpage_process_page_bufs
+                              mpage_prepare_extent_to_map
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%     0.00%  fio      [kernel.vmlinux]  [k] blk_queue_bio              
+                |
+                ---blk_queue_bio
+                   generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   |          
+                   |--55.73%-- ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --44.27%-- ext4_bio_write_page
+                              mpage_submit_page
+                              mpage_process_page_bufs
+                              mpage_prepare_extent_to_map
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+   100.00%   100.00%  fio      [kernel.vmlinux]  [k] blk_queue_split            
+                |
+                ---blk_queue_split
+                   blk_queue_bio
+                   generic_make_request
+                   submit_bio
+                   ext4_io_submit
+                   |          
+                   |--55.73%-- ext4_writepages
+                   |          do_writepages
+                   |          __filemap_fdatawrite_range
+                   |          sys_fadvise64
+                   |          do_syscall_64
+                   |          return_from_SYSCALL_64
+                   |          posix_fadvise64
+                   |          0
+                   |          
+                    --44.27%-- ext4_bio_write_page
+                              mpage_submit_page
+                              mpage_process_page_bufs
+                              mpage_prepare_extent_to_map
+                              ext4_writepages
+                              do_writepages
+                              __filemap_fdatawrite_range
+                              sys_fadvise64
+                              do_syscall_64
+                              return_from_SYSCALL_64
+                              posix_fadvise64
+                              0
+
+    44.27%     0.00%  fio      [ext4]            [k] mpage_prepare_extent_to_map
+                |
+                ---mpage_prepare_extent_to_map
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    44.27%     0.00%  fio      [ext4]            [k] mpage_process_page_bufs    
+                |
+                ---mpage_process_page_bufs
+                   mpage_prepare_extent_to_map
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    44.27%     0.00%  fio      [ext4]            [k] mpage_submit_page          
+                |
+                ---mpage_submit_page
+                   mpage_process_page_bufs
+                   mpage_prepare_extent_to_map
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+    44.27%     0.00%  fio      [ext4]            [k] ext4_bio_write_page        
+                |
+                ---ext4_bio_write_page
+                   mpage_submit_page
+                   mpage_process_page_bufs
+                   mpage_prepare_extent_to_map
+                   ext4_writepages
+                   do_writepages
+                   __filemap_fdatawrite_range
+                   sys_fadvise64
+                   do_syscall_64
+                   return_from_SYSCALL_64
+                   posix_fadvise64
+                   0
+
+
+
+#
+# (For a higher level overview, try: perf report --sort comm,dso)
+#
