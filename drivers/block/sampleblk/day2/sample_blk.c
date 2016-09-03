@@ -155,6 +155,9 @@ static int sampleblk_alloc(int minor)
 		goto fail_data;
 	}
 
+	/* Remove IO stack limits to avoid bio split */
+	blk_set_stacking_limits(&sampleblk_dev->queue->limits);
+
 	disk = alloc_disk(minor);
 	if (!disk) {
 		rv = -ENOMEM;
