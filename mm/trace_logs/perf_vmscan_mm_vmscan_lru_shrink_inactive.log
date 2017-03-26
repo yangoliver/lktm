@@ -1,0 +1,98 @@
+Env: OS RHEL7/kernel 3.10.0-327
+
+# create some memory pressure by used up all physical memory
+$sudo mount -t tmpfs -o size=90G tmpfs /mytmpfs
+#run fio test over /mytmpfs/test, the file size is 90G
+
+$sudo perf record -e vmscan:mm_vmscan_lru_shrink_inactive -ag sleep 60
+$sudo perf report --max-stack=16 --stdio -s parent
+Warning:
+Processed 19714 events and lost 1 chunks!
+
+Check IO/CPU overload!
+
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 14K of event 'vmscan:mm_vmscan_lru_shrink_inactive'
+# Event count (approx.): 14960
+#
+# Children      Self  Parent symbol
+# ........  ........  .............
+#
+    67.65%    67.65%  [other]      
+            |
+            ---shrink_inactive_list
+               shrink_lruvec
+               shrink_zone
+               |          
+               |--98.69%-- balance_pgdat
+               |          kswapd
+               |          kthread
+               |          ret_from_fork
+               |          
+                --1.31%-- do_try_to_free_pages
+                          try_to_free_pages
+                          __alloc_pages_nodemask
+                          alloc_pages_current
+                          __page_cache_alloc
+                          |          
+                          |--66.92%-- grab_cache_page_write_begin
+                          |          ext4_da_write_begin
+                          |          generic_file_buffered_write
+                          |          __generic_file_aio_write
+                          |          generic_file_aio_write
+                          |          ext4_file_write
+                          |          do_sync_write
+                          |          
+                           --33.08%-- find_or_create_page
+                                     ext4_mb_load_buddy
+                                     ext4_mb_regular_allocator
+                                     ext4_mb_new_blocks
+                                     ext4_ext_map_blocks
+                                     ext4_map_blocks
+                                     ext4_writepages
+
+    20.27%    20.27%  do_page_fault
+            |
+            ---shrink_inactive_list
+               shrink_lruvec
+               shrink_zone
+               do_try_to_free_pages
+               try_to_free_pages
+               __alloc_pages_nodemask
+               alloc_pages_current
+               __page_cache_alloc
+               |          
+               |--61.08%-- filemap_fault
+               |          __do_fault
+               |          handle_mm_fault
+               |          __do_page_fault
+               |          do_page_fault
+               |          page_fault
+               |          |          
+               |           --100.00%-- getname_flags
+               |          
+                --38.92%-- __do_page_cache_readahead
+                          ra_submit
+                          filemap_fault
+                          __do_fault
+                          handle_mm_fault
+                          __do_page_fault
+                          do_page_fault
+
+    12.08%    12.08%  sys_fallocate
+            |
+            ---shrink_inactive_list
+               shrink_lruvec
+               shrink_zone
+               do_try_to_free_pages
+               try_to_free_pages
+               __alloc_pages_nodemask
+               alloc_pages_vma
+               shmem_alloc_page
+               shmem_getpage_gfp
+               shmem_fallocate
+               vfs_fallocate
+               sys_fallocate
+               system_call
+               posix_fallocate64
