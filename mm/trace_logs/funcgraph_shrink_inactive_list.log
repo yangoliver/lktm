@@ -1,0 +1,202 @@
+Env: OS RHEL7/kernel 3.10.0-327
+
+# create some memory pressure by used up all physical memory
+$sudo mount -t tmpfs -o size=90G tmpfs /mytmpfs
+# run fio test over /mytmpfs/test, the file size is 90G
+
+
+$ sudo ./bin/funcgraph shrink_inactive_list | tee a.log
+Tracing "shrink_inactive_list"... Ctrl-C to end.
+  8)               |  shrink_inactive_list() {
+  8)               |    lru_add_drain() {
+  8)               |      lru_add_drain_cpu() {
+  8)               |        pagevec_lru_move_fn() {
+  8)   0.133 us    |          _raw_spin_lock_irqsave();
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.040 us    |            lookup_page_cgroup();
+  8)   0.502 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.039 us    |            mem_cgroup_update_lru_size();
+  8)   0.040 us    |            __mod_zone_page_state();
+  8)   1.041 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.038 us    |            lookup_page_cgroup();
+  8)   0.366 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.040 us    |            mem_cgroup_update_lru_size();
+  8)   0.040 us    |            __mod_zone_page_state();
+  8)   0.784 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.038 us    |            lookup_page_cgroup();
+  8)   0.356 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.037 us    |            mem_cgroup_update_lru_size();
+  8)   0.040 us    |            __mod_zone_page_state();
+  8)   0.721 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.037 us    |            lookup_page_cgroup();
+  8)   0.423 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.039 us    |            mem_cgroup_update_lru_size();
+  8)   0.065 us    |            __mod_zone_page_state();
+  8)   0.772 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.039 us    |            lookup_page_cgroup();
+  8)   0.391 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.042 us    |            mem_cgroup_update_lru_size();
+  8)   0.061 us    |            __mod_zone_page_state();
+  8)   0.741 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.039 us    |            lookup_page_cgroup();
+  8)   0.360 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.036 us    |            mem_cgroup_update_lru_size();
+  8)   0.037 us    |            __mod_zone_page_state();
+  8)   0.716 us    |          }
+  8)               |          mem_cgroup_page_lruvec() {
+  8)   0.038 us    |            lookup_page_cgroup();
+  8)   0.386 us    |          }
+  8)               |          __pagevec_lru_add_fn() {
+  8)   0.036 us    |            mem_cgroup_update_lru_size();
+  8)   0.038 us    |            __mod_zone_page_state();
+  8)   0.728 us    |          }
+  8)   0.051 us    |          _raw_spin_unlock_irqrestore();
+  8)               |          release_pages() {
+  8)   0.041 us    |            free_hot_cold_page_list();
+  8)   0.426 us    |          }
+  8) + 14.678 us   |        }
+  8) + 15.055 us   |      }
+  8) + 15.517 us   |    }
+  8)   0.046 us    |    _raw_spin_lock_irq();
+  8)               |    isolate_lru_pages.isra.43() {
+  8)   0.130 us    |      __isolate_lru_page();
+  8)   0.043 us    |      mem_cgroup_update_lru_size();
+  8)   0.061 us    |      __isolate_lru_page();
+  8)   0.038 us    |      mem_cgroup_update_lru_size();
+  8)   1.702 us    |    }
+  8)   0.040 us    |    __mod_zone_page_state();
+  8)   0.044 us    |    __mod_zone_page_state();
+  8)               |    shrink_page_list() {
+  8)   0.045 us    |      _cond_resched();
+  8)   0.059 us    |      mem_cgroup_uncharge_start();
+  8)   0.040 us    |      _cond_resched();
+  8)               |      page_evictable() {
+  8)   0.040 us    |        page_mapping();
+  8)   0.428 us    |      }
+  8)   0.040 us    |      page_mapping();
+  8)   0.121 us    |      page_referenced();
+  8)               |      __remove_mapping() {
+  8)   0.038 us    |        page_mapping();
+  8)   0.080 us    |        _raw_spin_lock_irq();
+  8)   0.044 us    |        workingset_eviction();
+  8)               |        __delete_from_page_cache() {
+  8)   0.080 us    |          __cleancache_put_page();
+  8)               |          __dec_zone_page_state() {
+  8)   0.042 us    |            __dec_zone_state();
+  8)   0.408 us    |          }
+  8)   1.650 us    |        }
+  8)               |        mem_cgroup_uncharge_cache_page() {
+  8)               |          __mem_cgroup_uncharge_common() {
+  8)   0.047 us    |            lookup_page_cgroup();
+  8)   0.083 us    |            mem_cgroup_charge_statistics.isra.18();
+  8)   0.043 us    |            memcg_check_events();
+  8)   1.483 us    |          }
+  8)   1.860 us    |        }
+  8)   5.361 us    |      }
+  8)   0.039 us    |      _cond_resched();
+  8)               |      page_evictable() {
+  8)   0.036 us    |        page_mapping();
+  8)   0.372 us    |      }
+  8)   0.042 us    |      page_mapping();
+  8)               |      page_referenced() {
+  8)               |        mutex_lock() {
+  8)   0.040 us    |          _cond_resched();
+  8)   0.395 us    |        }
+  8)               |        vma_interval_tree_iter_first() {
+  8)   0.224 us    |          vma_interval_tree_subtree_search();
+  8)   0.668 us    |        }
+  8)               |        page_referenced_one() {
+  8)               |          __page_check_address() {
+  8)   0.044 us    |            PageHuge();
+  8)   0.398 us    |            mm_find_pmd();
+  8)   1.221 us    |          }
+  8)   1.627 us    |        }
+  8)   0.073 us    |        vma_interval_tree_iter_next();
+  8)               |        page_referenced_one() {
+  8)               |          __page_check_address() {
+  8)   0.041 us    |            PageHuge();
+  8)   0.254 us    |            mm_find_pmd();
+  8)   0.087 us    |            _raw_spin_lock();
+  8)   1.369 us    |          }
+  8)               |          ptep_clear_flush_young() {
+  8)   0.079 us    |            ptep_test_and_clear_young();
+  8)   0.219 us    |            flush_tlb_page();
+  8)   0.961 us    |          }
+  8)   0.041 us    |          _raw_spin_unlock();
+  8)   3.352 us    |        }
+  8)               |        vma_interval_tree_iter_next() {
+  8)   0.089 us    |          vma_interval_tree_subtree_search();
+  8)   0.523 us    |        }
+  8)               |        page_referenced_one() {
+  8)               |          __page_check_address() {
+  8)   0.036 us    |            PageHuge();
+  8)   0.321 us    |            mm_find_pmd();
+  8)   0.085 us    |            _raw_spin_lock();
+  8)   2.023 us    |          }
+  8)               |          ptep_clear_flush_young() {
+  8)   0.055 us    |            ptep_test_and_clear_young();
+  8)               |            flush_tlb_page() {
+  8)               |              native_flush_tlb_others() {
+  8)   0.078 us    |                is_uv_system();
+  8)               |                smp_call_function_many() {
+  8)               |                  smp_call_function_single() {
+  8)               |                    generic_exec_single() {
+  8)               |                      native_send_call_func_single_ipi() {
+  8)               |                        x2apic_send_IPI_mask() {
+  8)   0.611 us    |                          __x2apic_send_IPI_mask();
+  8)   1.060 us    |                        }
+  8)   1.427 us    |                      }
+  8)   3.469 us    |                    }
+  8)   4.038 us    |                  }
+  8)   5.035 us    |                }
+  8)   6.470 us    |              }
+  8)   7.033 us    |            }
+  8)   7.839 us    |          }
+  8)   0.040 us    |          _raw_spin_unlock();
+  8) + 11.170 us   |        }
+  8)   0.075 us    |        mutex_unlock();
+  8) + 20.491 us   |      }
+  8)               |      unlock_page() {
+  8)   0.038 us    |        __smp_mb__after_atomic();
+  8)   0.045 us    |        page_waitqueue();
+  8)   0.055 us    |        __wake_up_bit();
+  8)   1.107 us    |      }
+  8)               |      free_hot_cold_page_list() {
+  8)               |        free_hot_cold_page() {
+  8)   0.061 us    |          free_pages_prepare();
+  8)   0.057 us    |          get_pageblock_flags_group();
+  8)   0.849 us    |        }
+  8)   1.258 us    |      } /* free_hot_cold_page_list */
+  8)   0.063 us    |      mem_cgroup_uncharge_end();
+  8) + 35.734 us   |    }
+  8)   6.268 us    |    _raw_spin_lock_irq();
+  8)               |    putback_inactive_pages() {
+  8)               |      page_evictable() {
+  8)   0.039 us    |        page_mapping();
+  8)   0.419 us    |      }
+  8)               |      mem_cgroup_page_lruvec() {
+  8)   0.036 us    |        lookup_page_cgroup();
+  8)   0.493 us    |      }
+  8)   0.075 us    |      mem_cgroup_update_lru_size();
+  8)   0.038 us    |      __mod_zone_page_state();
+  8)   2.642 us    |    }
+  8)   0.038 us    |    __mod_zone_page_state();
+  8)   0.055 us    |    free_hot_cold_page_list();
+  8)               |    wait_iff_congested() {
+  8)   0.040 us    |      _cond_resched();
+  8)   0.038 us    |      jiffies_to_usecs();
+  8)   0.038 us    |      jiffies_to_usecs();
+  8)   1.197 us    |    }
+  8) + 67.605 us   |  }
+
