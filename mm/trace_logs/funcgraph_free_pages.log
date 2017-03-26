@@ -1,0 +1,95 @@
+Env: OS RHEL7/kernel 3.10.0-327
+
+$sudo ./bin/funcgraph -d 1 free_pages | tee a.log
+Tracing "free_pages" for 1 seconds...
+ 19)               |  free_pages() {
+ 19)               |    free_pages.part.62() {
+ 19)               |      __free_pages() {
+ 19)               |        free_hot_cold_page() {
+ 19)   0.175 us    |          free_pages_prepare();
+ 19)   0.167 us    |          get_pageblock_flags_group();
+ 19)   1.660 us    |        }
+ 19)   2.089 us    |      }
+ 19)   2.648 us    |    }
+ 19)   3.506 us    |  }
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.134 us    |          free_pages_prepare();
+ 13)   0.092 us    |          get_pageblock_flags_group();
+ 13)   1.243 us    |        }
+ 13)   1.652 us    |      }
+ 13)   2.211 us    |    }
+ 13)   3.052 us    |  }
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.078 us    |          free_pages_prepare();
+ 13)   0.054 us    |          get_pageblock_flags_group();
+ 13)   0.810 us    |        }
+ 13)   1.177 us    |      }
+ 13)   1.530 us    |    }
+ 13)   1.960 us    |  }
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.097 us    |          free_pages_prepare();
+ 13)   0.066 us    |          get_pageblock_flags_group();
+ 13)   0.986 us    |        }
+ 13)   1.336 us    |      }
+ 13)   1.820 us    |    }
+ 13)   2.388 us    |  }
+ ------------------------------------------
+ 19)   sleep-7124   =>  funcgra-7125 
+ ------------------------------------------
+
+ 19)               |  free_pages() {
+ 19)               |    free_pages.part.62() {
+ 19)               |      __free_pages() {
+ 19)               |        free_hot_cold_page() {
+ 19)   0.113 us    |          free_pages_prepare();
+ 19)   0.084 us    |          get_pageblock_flags_group();
+ 19)   1.215 us    |        }
+ 19)   1.630 us    |      }
+ 19)   2.052 us    |    }
+ 19)   2.730 us    |  }
+ ------------------------------------------
+ 13)   sleep-7124   =>  funcgra-7125 
+ ------------------------------------------
+
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.099 us    |          free_pages_prepare();
+ 13)   0.065 us    |          get_pageblock_flags_group();
+ 13)   1.078 us    |        }
+ 13)   1.524 us    |      }
+ 13)   2.061 us    |    }
+ 13)   2.629 us    |  }
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.080 us    |          free_pages_prepare();
+ 13)   0.054 us    |          get_pageblock_flags_group();
+ 13)   0.998 us    |        }
+ 13)   1.455 us    |      }
+ 13)   1.883 us    |    }
+ 13)   2.405 us    |  }
+ 13)               |  free_pages() {
+ 13)               |    free_pages.part.62() {
+ 13)               |      __free_pages() {
+ 13)               |        free_hot_cold_page() {
+ 13)   0.131 us    |          free_pages_prepare();
+ 13)   0.073 us    |          get_pageblock_flags_group();
+ 13)   1.078 us    |        }
+ 13)   1.454 us    |      }
+ 13)   1.878 us    |    }
+ 13)   2.284 us    |  }
+
+Ending tracing...
+
