@@ -1,0 +1,82 @@
+Env: OS RHEL7/kernel 3.10.0-327
+
+$sudo perf record -e kmem:mm_page_alloc -ag sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.196 MB perf.data (56 samples) ]
+
+$sudo perf report --max-stack=6 --stdio -s parent
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 56  of event 'kmem:mm_page_alloc'
+# Event count (approx.): 56
+#
+# Children      Self  Parent symbol
+# ........  ........  .............
+#
+    76.79%    76.79%  [other]      
+            |
+            ---__alloc_pages_nodemask
+               |          
+               |--72.09%-- alloc_pages_current
+               |          |          
+               |          |--58.06%-- pte_alloc_one
+               |          |          __pte_alloc
+               |          |          |          
+               |          |          |--94.44%-- handle_mm_fault
+               |          |          |          
+               |          |           --5.56%-- move_page_tables
+               |          |          
+               |          |--22.58%-- __get_free_pages
+               |          |          |          
+               |          |          |--42.86%-- get_zeroed_page
+               |          |          |          __pud_alloc
+               |          |          |          
+               |          |          |--28.57%-- __tlb_remove_page
+               |          |          |          unmap_page_range
+               |          |          |          
+               |          |          |--14.29%-- __pollwait
+               |          |          |          perf_poll
+               |          |          |          
+               |          |           --14.29%-- pgd_alloc
+               |          |                     mm_init
+               |          |          
+               |          |--12.90%-- __pmd_alloc
+               |          |          |          
+               |          |          |--75.00%-- handle_mm_fault
+               |          |          |          |          
+               |          |          |          |--66.67%-- __do_page_fault
+               |          |          |          |          
+               |          |          |           --33.33%-- __get_user_pages
+               |          |          |          
+               |          |           --25.00%-- move_page_tables
+               |          |                     shift_arg_pages
+               |          |          
+               |          |--3.23%-- pipe_write
+               |          |          do_sync_write
+               |          |          vfs_write
+               |          |          
+               |           --3.23%-- __page_cache_alloc
+               |                     grab_cache_page_write_begin
+               |                     ext4_da_write_begin
+               |          
+                --27.91%-- alloc_pages_vma
+                          |          
+                          |--58.33%-- __do_fault
+                          |          handle_mm_fault
+                          |          __do_page_fault
+                          |          
+                          |--33.33%-- do_wp_page
+                          |          handle_mm_fault
+                          |          __do_page_fault
+                          |          
+                           --8.33%-- handle_mm_fault
+                                     __get_user_pages
+                                     get_user_pages
+
+    23.21%    23.21%  do_page_fault
+            |
+            ---__alloc_pages_nodemask
+               alloc_pages_vma
+               handle_mm_fault
+               __do_page_fault
+               do_page_fault
