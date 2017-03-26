@@ -1,5 +1,11 @@
 Env: OS RHEL7/kernel 3.10.0-327
 
+#
+# The code path for /proc/vmstat nr_inactive_anon counter updates
+#
+# shrink_inactive_list->isolate_lru_pages->update_lru_sizes->__update_lru_size->[__mod_node_page_state(pgdat, NR_LRU_BASE + lru, nr_pages);]
+#
+
 # create some memory pressure by used up all physical memory
 $sudo mount -t tmpfs -o size=90G tmpfs /mytmpfs
 # run fio test over /mytmpfs/test, the file size is 90G
@@ -199,4 +205,3 @@ Tracing "shrink_inactive_list"... Ctrl-C to end.
   8)   0.038 us    |      jiffies_to_usecs();
   8)   1.197 us    |    }
   8) + 67.605 us   |  }
-
