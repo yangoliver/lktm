@@ -1,0 +1,71 @@
+Env: OS RHEL7/kernel 3.10.0-327
+
+$sudo perf record -e kmem:mm_page_free -ag sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.194 MB perf.data (123 samples) ]
+
+$sudo perf report --max-stack=10 --stdio -s parent
+# To display the perf.data header info, please use --header/--header-only options.
+#
+# Samples: 123  of event 'kmem:mm_page_free'
+# Event count (approx.): 123
+#
+# Children      Self  Parent symbol
+# ........  ........  .............
+#
+    99.19%    99.19%  [other]      
+            |
+            ---free_pages_prepare
+               free_hot_cold_page
+               |          
+               |--96.72%-- free_hot_cold_page_list
+               |          release_pages
+               |          free_pages_and_swap_cache
+               |          tlb_flush_mmu.part.54
+               |          tlb_finish_mmu
+               |          |          
+               |          |--95.76%-- exit_mmap
+               |          |          mmput
+               |          |          
+               |          |--2.54%-- unmap_region
+               |          |          do_munmap
+               |          |          
+               |           --1.69%-- shift_arg_pages
+               |                     setup_arg_pages
+               |          
+                --3.28%-- __free_pages
+                          |          
+                          |--75.00%-- free_pages.part.62
+                          |          free_pages
+                          |          |          
+                          |          |--66.67%-- tlb_finish_mmu
+                          |          |          exit_mmap
+                          |          |          mmput
+                          |          |          |          
+                          |          |          |--50.00%-- flush_old_exec
+                          |          |          |          
+                          |          |           --50.00%-- do_exit
+                          |          |          
+                          |           --33.33%-- pgd_free
+                          |                     __mmdrop
+                          |                     finish_task_switch
+                          |                     __schedule
+                          |          
+                           --25.00%-- free_pipe_info
+                                     put_pipe_info
+                                     pipe_release
+                                     __fput
+                                     ____fput
+                                     task_work_run
+
+     0.81%     0.81%  sys_poll     
+            |
+            ---free_pages_prepare
+               free_hot_cold_page
+               __free_pages
+               free_pages.part.62
+               free_pages
+               poll_freewait
+               do_sys_poll
+               sys_poll
+               system_call
