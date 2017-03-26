@@ -13,3 +13,6 @@ Description of directories,
 	fs - file system
 		docs - the training documents
 		samplefs - Demo filesystem by Steve French
+
+	mm - memory management
+	    trace_logs - trace logs for understanding Linux memory management code
