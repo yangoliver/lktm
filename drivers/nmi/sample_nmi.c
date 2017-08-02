@@ -39,7 +39,7 @@ static int samplenmi_handler(unsigned int cmd, struct pt_regs *regs)
 	rsp = regs->sp;
 
 	if (rsp < __PAGE_OFFSET) {
-		show_regs(regs);
+		show_regs(regs); /* This requires EXPORT_SYMBOL(show_regs) in kernel */
 		pr_err("User Stack Pointer: %016lx", rsp);
 		pr_err("User Stack Dump: %016lx", *((unsigned long *)rsp));
 	} else {
